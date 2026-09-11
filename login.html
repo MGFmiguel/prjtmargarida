@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#9e4f5c" />
+    <title>Entrar — Casa Mamãe Margarida</title>
+    <link rel="icon" href="/img/favicon.svg" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/login.css" />
+  </head>
+  <body>
+    <main class="auth-page">
+      <section class="auth-story">
+        <div id="auth-brand"></div>
+        <div>
+          <div class="auth-flower"><i data-lucide="flower-2"></i></div>
+          <h1>Cuidar de quem cuida.<br /><em>Transformar, juntas.</em></h1>
+          <p>
+            Um espaço para organizar nosso trabalho e dedicar mais tempo ao que importa: acolher
+            cada mulher.
+          </p>
+        </div>
+        <p>Casa Mamãe Margarida · Acolhimento que transforma</p>
+      </section>
+      <section class="auth-main">
+        <div class="auth-box">
+          <div class="eyebrow">ÁREA DA EQUIPE</div>
+          <h2>Que bom ter você aqui.</h2>
+          <p>Entre com suas credenciais para acessar o painel.</p>
+          <form id="auth-form" data-mode="login">
+            <label class="field"
+              >E-mail *<input
+                type="email"
+                name="email"
+                required
+                autocomplete="username"
+                placeholder="seu@email.com" /></label
+            ><label class="field"
+              >Senha *<span class="password-wrap"
+                ><input
+                  name="password"
+                  type="password"
+                  required
+                  autocomplete="current-password"
+                  placeholder="Digite sua senha" /><button
+                  type="button"
+                  id="toggle-password"
+                  class="icon-button"
+                  aria-label="Mostrar senha"
+                >
+                  <i data-lucide="eye"></i></button></span
+            ></label>
+            <div class="auth-options">
+              <label class="checkbox"
+                ><input type="checkbox" name="remember" />Manter sessão ativa</label
+              ><button id="forgot-password" type="button" class="text-button">
+                Esqueci minha senha
+              </button>
+            </div>
+            <button type="submit" class="button">
+              Entrar no painel<i data-lucide="arrow-right"></i>
+            </button>
+            <p class="auth-status" id="auth-status" role="status"></p>
+          </form>
+          <p class="security-note">
+            <i data-lucide="lock-keyhole"></i>Acesso exclusivo para a equipe autorizada
+          </p>
+          <a class="auth-back" href="index.html"
+            ><i data-lucide="arrow-left"></i>Voltar para o início</a
+          >
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/js/login.js"></script>
+  </body>
+</html>

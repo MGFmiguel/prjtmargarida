@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#9e4f5c" />
+    <title>Vamos conversar? — Casa Mamãe Margarida</title>
+    <link rel="icon" href="/img/favicon.svg" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header id="site-header"></header>
+    <main id="conteudo">
+      <section class="page-hero">
+        <div class="eyebrow">CUIDADO, RESPEITO E ACOLHIMENTO</div>
+        <h1>Vamos conversar?</h1>
+        <p>Dúvidas, sugestões ou vontade de fazer parte? Sua mensagem é bem-vinda.</p>
+      </section>
+      <div class="container form-layout">
+        <aside class="info-card">
+          <i data-lucide="heart-handshake"></i>
+          <h2>Uma conversa pode ser o começo.</h2>
+          <p>
+            Use este canal para falar com a instituição. Nossa equipe responderá pelo e-mail ou
+            telefone informado.
+          </p>
+          <p>Para solicitar um serviço, utilize o formulário de atendimento.</p>
+          <a href="solicitar-atendimento.html">Solicitar atendimento</a>
+        </aside>
+        <form id="public-form" class="form-card" data-table="mensagens">
+          <h2>Vamos dar o primeiro passo?</h2>
+          <p class="form-intro">Preencha os campos abaixo. Os itens com * são obrigatórios.</p>
+          <div class="form-grid">
+            <label class="field full"
+              >Nome *<input
+                type="text"
+                name="nome"
+                required
+                maxlength="250"
+                autocomplete="name"
+                minlength="3" /></label
+            ><label class="field"
+              >E-mail *<input type="email" name="email" required autocomplete="email" /></label
+            ><label class="field"
+              >Telefone<input type="tel" name="telefone" pattern="[0-9()+ .\-]{10,20}" /></label
+            ><label class="field full"
+              >Assunto *<input type="text" name="assunto" required maxlength="250" /></label
+            ><label class="field full"
+              >Mensagem *<textarea name="mensagem" required maxlength="4000"></textarea></label
+            ><label class="checkbox full"
+              ><input type="checkbox" name="consentimento" required />Autorizo o uso dos meus dados
+              exclusivamente para fins de atendimento da instituição.</label
+            >
+            <div hidden aria-hidden="true">
+              <label>Deixe vazio<input name="website" tabindex="-1" autocomplete="off" /></label>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="button">
+              Enviar mensagem<i data-lucide="arrow-up-right"></i>
+            </button>
+          </div>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </main>
+    <footer id="site-footer"></footer>
+    <script type="module" src="/js/forms.js"></script>
+  </body>
+</html>

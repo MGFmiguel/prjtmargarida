@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#9e4f5c" />
+    <title>Você não está sozinha. — Casa Mamãe Margarida</title>
+    <link rel="icon" href="/img/favicon.svg" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header id="site-header"></header>
+    <main id="conteudo">
+      <section class="page-hero">
+        <div class="eyebrow">CUIDADO, RESPEITO E ACOLHIMENTO</div>
+        <h1>Você não está sozinha.</h1>
+        <p>
+          Estamos aqui para ouvir você. Conte um pouco sobre o que precisa e nossa equipe poderá
+          orientar os próximos passos.
+        </p>
+      </section>
+      <div class="container form-layout">
+        <aside class="info-card">
+          <i data-lucide="heart-handshake"></i>
+          <h2>Um espaço para acolher você.</h2>
+          <p>
+            Seus dados serão acessados apenas pela equipe autorizada, para organizar sua
+            solicitação.
+          </p>
+          <p>
+            O envio não confirma um agendamento. Aguarde o contato da instituição para combinar o
+            atendimento.
+          </p>
+          <p>Compartilhe somente as informações necessárias para este primeiro contato.</p>
+          <a href="contato.html">Precisa de ajuda com o formulário?</a>
+        </aside>
+        <form id="public-form" class="form-card" data-table="beneficiarias">
+          <h2>Vamos dar o primeiro passo?</h2>
+          <p class="form-intro">Preencha os campos abaixo. Os itens com * são obrigatórios.</p>
+          <div class="form-grid">
+            <label class="field full"
+              >Nome completo *<input
+                type="text"
+                name="nome"
+                required
+                maxlength="250"
+                autocomplete="name"
+                minlength="3" /></label
+            ><label class="field"
+              >Data de nascimento *<input type="date" name="data_nascimento" required /></label
+            ><label class="field"
+              >CPF *<input
+                type="text"
+                name="cpf"
+                required
+                maxlength="250"
+                inputmode="numeric"
+                placeholder="000.000.000-00" /></label
+            ><label class="field"
+              >Telefone *<input
+                type="tel"
+                name="telefone"
+                required
+                autocomplete="tel"
+                pattern="[0-9()+ .\-]{10,20}"
+                placeholder="(92) 99999-9999" /></label
+            ><label class="field"
+              >E-mail<input type="email" name="email" autocomplete="email" maxlength="254" /></label
+            ><label class="field full"
+              >Endereço *<input
+                type="text"
+                name="endereco"
+                required
+                maxlength="250"
+                autocomplete="street-address" /></label
+            ><label class="field"
+              >Bairro *<input type="text" name="bairro" required maxlength="250" /></label
+            ><label class="field"
+              >Cidade *<input type="text" name="cidade" required maxlength="250" /></label
+            ><label class="field full"
+              >Tipo de atendimento desejado *<select name="tipo_atendimento" required>
+                <option value="">Selecione um serviço</option>
+              </select></label
+            ><label class="field full"
+              >Motivo do atendimento *<textarea
+                name="motivo_atendimento"
+                required
+                maxlength="4000"
+              ></textarea></label
+            ><label class="field full"
+              >Observações<textarea name="observacoes" maxlength="4000"></textarea></label
+            ><label class="checkbox full"
+              ><input type="checkbox" name="consentimento" required />Autorizo o uso dos meus dados
+              exclusivamente para fins de atendimento da instituição.</label
+            >
+            <div hidden aria-hidden="true">
+              <label>Deixe vazio<input name="website" tabindex="-1" autocomplete="off" /></label>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="button">
+              Enviar solicitação<i data-lucide="arrow-up-right"></i>
+            </button>
+          </div>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </main>
+    <footer id="site-footer"></footer>
+    <script type="module" src="/js/forms.js"></script>
+  </body>
+</html>

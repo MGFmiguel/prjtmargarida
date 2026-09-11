@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#9e4f5c" />
+    <title>Recuperar senha — Casa Mamãe Margarida</title>
+    <link rel="icon" href="/img/favicon.svg" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/login.css" />
+  </head>
+  <body>
+    <main class="auth-page">
+      <section class="auth-story">
+        <div id="auth-brand"></div>
+        <div>
+          <div class="auth-flower"><i data-lucide="flower-2"></i></div>
+          <h1>Cuidar de quem cuida.<br /><em>Transformar, juntas.</em></h1>
+          <p>
+            Um espaço para organizar nosso trabalho e dedicar mais tempo ao que importa: acolher
+            cada mulher.
+          </p>
+        </div>
+        <p>Casa Mamãe Margarida · Acolhimento que transforma</p>
+      </section>
+      <section class="auth-main">
+        <div class="auth-box">
+          <div class="eyebrow">ÁREA DA EQUIPE</div>
+          <h2>Um novo acesso.</h2>
+          <p>Defina uma senha com pelo menos 12 caracteres.</p>
+          <form id="auth-form" data-mode="reset">
+            <label class="field"
+              >Nova senha *<span class="password-wrap"
+                ><input
+                  name="password"
+                  type="password"
+                  required
+                  minlength="12"
+                  autocomplete="new-password"
+                  placeholder="Crie sua nova senha" /><button
+                  type="button"
+                  id="toggle-password"
+                  class="icon-button"
+                  aria-label="Mostrar senha"
+                >
+                  <i data-lucide="eye"></i></button></span
+            ></label>
+            <div style="height: 24px"></div>
+            <button type="submit" class="button">
+              Salvar nova senha<i data-lucide="arrow-right"></i>
+            </button>
+            <p class="auth-status" id="auth-status" role="status"></p>
+          </form>
+          <p class="security-note">
+            <i data-lucide="lock-keyhole"></i>Acesso exclusivo para a equipe autorizada
+          </p>
+          <a class="auth-back" href="login.html"
+            ><i data-lucide="arrow-left"></i>Voltar para entrar</a
+          >
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/js/login.js"></script>
+  </body>
+</html>
