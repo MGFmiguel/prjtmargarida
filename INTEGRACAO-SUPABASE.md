@@ -1,5 +1,7 @@
 # Integração do projeto existente
 
+**Complemento mais recente:** a Área da Usuária está documentada em [AREA-USUARIA.md](AREA-USUARIA.md). Depois de aplicar a migração 002, contas novas recebem `usuario`; para autorizar a equipe, edite o perfil existente. As instruções abaixo registram a integração inicial.
+
 ## Resultado e impedimento identificado
 
 Arquitetura: **HTML/CSS/JavaScript com Vite**, sem Express ou backend próprio. A dependência `@supabase/supabase-js` já estava instalada. O design e os HTML/CSS foram preservados.
@@ -127,7 +129,8 @@ Erros: `PGRST205` indica tabela indisponível; `PGRST204` pode indicar coluna au
 insert into public.perfis (user_id, nome, email, cargo, role)
 select id, 'Administração da Casa', email, 'Administração', 'admin'
 from auth.users
-where email = 'SEU-EMAIL-REAL@EXEMPLO.COM';
+where email = 'SEU-EMAIL-REAL@EXEMPLO.COM'
+on conflict (user_id) do update set role = 'admin', cargo = excluded.cargo;
 ```
 
 3. Reinicie o Vite com `npm.cmd run dev` e abra `login.html`.

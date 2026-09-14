@@ -2,6 +2,7 @@ import { brand } from './layout.js';
 import { requireConnection } from './supabase.js';
 import { supabaseErrorMessage } from './supabase-errors.js';
 import { refreshIcons, icon } from './utils.js';
+import { destinationForRole, passwordRedirect } from './auth-routing.js';
 document.querySelector('#auth-brand').innerHTML = brand;
 refreshIcons();
 const form = document.querySelector('#auth-form');
@@ -50,12 +51,12 @@ form.onsubmit = async (e) => {
         .select('role')
         .eq('user_id', data.user.id)
         .maybeSingle();
-      if (profileError || !['admin', 'funcionario'].includes(profile?.role)) {
+      if (profileError || !destinationForRole(profile?.role)) {
         await client.auth.signOut();
         if (profileError) throw new Error(supabaseErrorMessage(profileError));
         throw new Error('Seu acesso à equipe ainda não foi autorizado. Fale com a administração.');
       }
-      location.assign('dashboard.html');
+      location.assign(destinationForRole(profile.role));
     }
   } catch (error) {
     status.textContent = error.message;
@@ -75,7 +76,7 @@ document.querySelector('#forgot-password')?.addEventListener('click', async () =
   button.disabled = true;
   try {
     const { error } = await requireConnection().auth.resetPasswordForEmail(email.value.trim(), {
-      redirectTo: `${location.origin}/recuperar-senha.html`,
+      redirectTo: passwordRedirect,
     });
     if (error)
       throw new Error('Não foi possível solicitar a recuperação. Tente novamente mais tarde.');

@@ -3,6 +3,14 @@ const text = (key, label, required = true) => ({ key, label, required, type: 'te
 const area = (key, label, required = true) => ({ key, label, required, type: 'textarea' });
 const select = (key, label, options) => ({ key, label, required: true, type: 'select', options });
 export const statuses = ['Pendente', 'Em análise', 'Em atendimento', 'Finalizado'];
+export const appointmentStatuses = [
+  'Agendada',
+  'Confirmada',
+  'Realizada',
+  'Cancelada',
+  'Reagendada',
+  ...statuses,
+];
 export const schemas = {
   beneficiarias: {
     table: 'beneficiarias',
@@ -46,9 +54,12 @@ export const schemas = {
       select('beneficiaria_id', 'Beneficiária', []),
       text('tipo_atendimento', 'Tipo de atendimento'),
       { key: 'data_atendimento', label: 'Data e hora', type: 'datetime-local', required: true },
-      area('descricao', 'Descrição'),
-      area('observacao', 'Observação', false),
-      select('status', 'Status', statuses),
+      { ...select('profissional_id', 'Profissional responsável', []), required: false },
+      text('local', 'Local', false),
+      area('descricao', 'Descrição interna'),
+      area('observacao', 'Observação interna', false),
+      area('observacao_usuario', 'Orientação visível à usuária', false),
+      select('status', 'Status', appointmentStatuses),
     ],
   },
   servicos: {
@@ -130,7 +141,7 @@ export const schemas = {
       text('nome', 'Nome completo'),
       { key: 'email', label: 'E-mail', type: 'email', required: true },
       text('cargo', 'Cargo', false),
-      select('role', 'Nível de acesso', ['funcionario', 'admin']),
+      select('role', 'Nível de acesso', ['usuario', 'funcionario', 'admin']),
     ],
   },
   mensagens: {
@@ -152,6 +163,48 @@ export const schemas = {
       ['assunto', 'Assunto'],
       ['mensagem', 'Mensagem'],
       ['created_at', 'Recebida em'],
+    ],
+  },
+  solicitacoes: {
+    table: 'solicitacoes',
+    title: 'Solicitações das usuárias',
+    subtitle:
+      'Analise os pedidos recebidos pela área individual e agende os atendimentos aprovados.',
+    columns: [
+      ['beneficiaria_nome', 'Usuária'],
+      ['servico_nome', 'Serviço'],
+      ['data_preferencia', 'Preferência'],
+      ['status', 'Status'],
+    ],
+    fields: [
+      select('status', 'Status', ['Pendente', 'Em análise', 'Aprovada', 'Recusada', 'Concluída']),
+    ],
+    details: [
+      ['beneficiaria_nome', 'Usuária'],
+      ['servico_nome', 'Serviço'],
+      ['motivo', 'Motivo'],
+      ['data_preferencia', 'Data preferencial'],
+      ['horario_preferencia', 'Horário preferencial'],
+      ['observacoes', 'Observações da usuária'],
+      ['status', 'Status'],
+      ['created_at', 'Solicitada em'],
+    ],
+  },
+  profissionais: {
+    table: 'profissionais',
+    title: 'Profissionais',
+    subtitle: 'Cadastre as pessoas responsáveis pelos atendimentos.',
+    create: 'Cadastrar profissional',
+    adminWrite: true,
+    columns: [
+      ['nome', 'Nome'],
+      ['especialidade', 'Especialidade'],
+      ['ativo', 'Ativo'],
+    ],
+    fields: [
+      text('nome', 'Nome completo'),
+      text('especialidade', 'Especialidade'),
+      { key: 'ativo', label: 'Profissional ativo', type: 'checkbox' },
     ],
   },
 };

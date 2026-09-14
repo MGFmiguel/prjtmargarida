@@ -18,6 +18,18 @@ const pages = [
   'configuracoes',
   'mensagens',
   'gestao-doacoes',
+  'cadastro',
+  'area-usuario',
+  'minhas-consultas',
+  'agenda',
+  'minhas-solicitacoes',
+  'nova-solicitacao',
+  'historico',
+  'perfil',
+  'notificacoes',
+  'redefinir-senha',
+  'solicitacoes',
+  'profissionais',
 ];
 export default defineConfig({
   server: { host: '0.0.0.0' },

@@ -1,5 +1,7 @@
 # Casa Mamãe Margarida
 
+**Nova Área da Usuária:** consulte [AREA-USUARIA.md](AREA-USUARIA.md) para ativar o cadastro, agenda, consultas, solicitações, perfil e notificações. A alteração usa a migração incremental `database/migrations/002_area_usuario.sql`; não execute novamente o SQL inicial em um banco existente.
+
 Site público e painel de gestão para uma instituição de acolhimento de mulheres. Feito com HTML5, CSS3, JavaScript modular, Vite e `@supabase/supabase-js`. O banco é PostgreSQL, com Supabase Auth, Storage privado e Row Level Security.
 
 O código completo está nos arquivos deste projeto. Não é preciso copiar trechos desta documentação para montar o site. Os exemplos de SQL para autorizar a primeira conta devem ser adaptados à sua conta real.
@@ -71,7 +73,7 @@ No Windows, `npm.cmd` evita o bloqueio do `npm.ps1` pela política de execução
 1. Entre no [painel do Supabase](https://supabase.com/dashboard) e crie um projeto na sua organização.
 2. Dê um nome ao projeto, escolha a região e guarde a senha do banco em um local seguro.
 3. Aguarde o provisionamento.
-4. Em Authentication, mantenha login por e-mail habilitado. Como a equipe é autorizada internamente, desabilite cadastro público se ele não for necessário.
+4. Em Authentication, mantenha login por e-mail habilitado. Para a nova Área da Usuária, aplique a migração 002 e habilite cadastro público com confirmação de e-mail; novas contas recebem somente o perfil `usuario`. A autorização de equipe continua sendo administrativa.
 5. Em Authentication → URL Configuration, configure a Site URL local e adicione `http://localhost:5173/recuperar-senha.html` às URLs permitidas. Se usar outro host ou porta, inclua a URL correspondente.
 
 **Teste:** confirme que você consegue abrir SQL Editor, Authentication e Storage no projeto. Consulte a documentação de [URLs de redirecionamento](https://supabase.com/docs/guides/auth/redirect-urls) para ajustar os ambientes local e publicado.
@@ -127,7 +129,8 @@ Em Authentication → Users, crie a primeira conta da equipe e confirme o e-mail
 insert into public.perfis (user_id, nome, email, cargo, role)
 select id, 'Nome da administradora', email, 'Administração', 'admin'
 from auth.users
-where email = 'SEU-EMAIL-REAL@EXEMPLO.COM';
+where email = 'SEU-EMAIL-REAL@EXEMPLO.COM'
+on conflict (user_id) do update set role = 'admin', cargo = excluded.cargo;
 ```
 
 Se nenhum registro for inserido, o e-mail não foi encontrado em Auth. Não cadastre a senha na tabela `perfis`.

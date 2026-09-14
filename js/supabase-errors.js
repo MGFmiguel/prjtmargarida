@@ -1,6 +1,6 @@
 // Mensagens úteis sem registrar payloads, senhas ou dados pessoais no console.
 export function supabaseErrorMessage(error, fallback = 'Não foi possível concluir a operação.') {
-  if (['PGRST205', '42P01', 'PGRST204', '42703'].includes(error?.code)) {
+  if (['PGRST205', 'PGRST202', '42P01', 'PGRST204', '42703'].includes(error?.code)) {
     return 'O banco de dados da instituição ainda precisa ser configurado. Nenhum envio foi confirmado. Tente novamente após a configuração.';
   }
   if (error?.code === '42501') {

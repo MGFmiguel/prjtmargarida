@@ -1,7 +1,7 @@
 import { supabase, configured } from './supabase.js';
 import { brand } from './layout.js';
 import { icon, refreshIcons, escapeHTML as esc, dateBR, notify, showDialog } from './utils.js';
-import { schemas, statuses } from './admin-schema.js';
+import { schemas, appointmentStatuses as statuses } from './admin-schema.js';
 import { supabaseErrorMessage } from './supabase-errors.js';
 const page = document.body.dataset.page;
 const content = document.querySelector('#admin-content');
@@ -9,6 +9,7 @@ let profile,
   user,
   rows = [],
   linkedBeneficiaries = [],
+  professionals = [],
   currentPage = 1;
 const pageSize = 12;
 const isAdmin = () => profile?.role === 'admin';
@@ -16,6 +17,8 @@ const navigation = [
   ['dashboard', 'layout-dashboard', 'Dashboard'],
   ['beneficiarias', 'users-round', 'Beneficiárias'],
   ['atendimentos', 'calendar-heart', 'Atendimentos'],
+  ['solicitacoes', 'clipboard-list', 'Solicitações das usuárias'],
+  ['profissionais', 'contact-round', 'Profissionais'],
   ['servicos', 'hand-heart', 'Serviços'],
   ['projetos', 'sprout', 'Projetos'],
   ['gestao-doacoes', 'gift', 'Doações', true],
@@ -46,6 +49,10 @@ async function init() {
     const result = await supabase.from('perfis').select('*').eq('user_id', user.id).maybeSingle();
     profile = result.data;
     if (result.error) throw result.error;
+    if (profile?.role === 'usuario') {
+      location.replace('area-usuario.html');
+      return;
+    }
     if (result.error || !['admin', 'funcionario'].includes(profile?.role)) {
       accessMessage(
         'Acesso não autorizado',
@@ -126,7 +133,16 @@ function title(name, description, action = '') {
   return `<div class="admin-title"><div><div class="eyebrow">ACOLHER PARA TRANSFORMAR</div><h1>${esc(name)}</h1><p>${esc(description)}</p></div>${action}</div>`;
 }
 function badge(value) {
-  const good = ['Finalizado', 'Ativo', 'Recebida', 'Confirmada', 'Sim'].includes(value);
+  const good = [
+    'Finalizado',
+    'Realizada',
+    'Aprovada',
+    'Concluída',
+    'Ativo',
+    'Recebida',
+    'Confirmada',
+    'Sim',
+  ].includes(value);
   return `<span class="badge ${good ? 'green' : ['Em atendimento', 'Em análise'].includes(value) ? 'pink' : ''}">${esc(value)}</span>`;
 }
 function format(key, value) {
@@ -148,17 +164,30 @@ async function renderCollection() {
         : ''
     ) +
     (page === 'usuarios'
-      ? '<p class="form-intro">Crie ou convide a conta em Supabase → Authentication → Users. Depois, copie o UUID para autorizar o perfil aqui. Remover um perfil revoga o acesso da equipe, sem excluir a conta Auth.</p>'
+      ? '<p class="form-intro">Novas contas recebem o perfil usuário. Para autorizar a equipe, edite o perfil existente. Use Autorizar usuário somente para contas Auth antigas que ainda não têm perfil.</p>'
       : '') +
     `<div class="toolbar"><input id="search" class="filter-input" type="search" aria-label="Buscar registros" placeholder="Buscar ${schema.title.toLowerCase()}…"><select id="status-filter" class="filter-input" aria-label="Filtrar por status"><option value="">Todos os status</option></select></div><div id="collection-table"><p class="loading">Carregando registros…</p></div><div id="pagination" class="pagination"></div>`;
   rows = await readAll(schema.table);
   if (page === 'atendimentos') {
-    linkedBeneficiaries = await readAll('beneficiarias', 'id,nome,created_at');
+    await loadAppointmentOptions();
     rows = rows.map((r) => ({
       ...r,
       beneficiaria_nome:
         linkedBeneficiaries.find((b) => b.id === r.beneficiaria_id)?.nome ||
         'Registro indisponível',
+    }));
+  }
+  if (page === 'solicitacoes') {
+    const [beneficiaries, services] = await Promise.all([
+      readAll('beneficiarias', 'id,nome,usuario_id,created_at'),
+      readAll('servicos', 'id,nome,created_at'),
+    ]);
+    rows = rows.map((r) => ({
+      ...r,
+      beneficiaria_nome:
+        beneficiaries.find((b) => b.usuario_id === r.usuario_id)?.nome || 'Cadastro indisponível',
+      beneficiaria_id: beneficiaries.find((b) => b.usuario_id === r.usuario_id)?.id,
+      servico_nome: services.find((s) => s.id === r.servico_id)?.nome || 'Serviço indisponível',
     }));
   }
   const filter = document.querySelector('#status-filter');
@@ -202,7 +231,7 @@ function renderRows() {
         .slice((currentPage - 1) * pageSize, currentPage * pageSize)
         .map(
           (r) =>
-            `<tr>${schema.columns.map(([key]) => `<td>${format(key, r[key])}</td>`).join('')}<td><div class="table-actions"><button class="icon-button" data-view="${r.id}" aria-label="Ver detalhes">${icon('eye')}</button>${canWrite && !(page === 'usuarios' && r.user_id === user.id) ? `<button class="icon-button" data-edit="${r.id}" aria-label="Editar registro">${icon('pencil')}</button>` : ''}${isAdmin() && !(page === 'usuarios' && r.user_id === user.id) ? `<button class="icon-button" data-delete="${r.id}" aria-label="Excluir registro">${icon('trash-2')}</button>` : ''}</div></td></tr>`
+            `<tr>${schema.columns.map(([key]) => `<td>${format(key, r[key])}</td>`).join('')}<td><div class="table-actions"><button class="icon-button" data-view="${r.id}" aria-label="Ver detalhes">${icon('eye')}</button>${canWrite && !(page === 'usuarios' && r.user_id === user.id) ? `<button class="icon-button" data-edit="${r.id}" aria-label="Editar registro">${icon('pencil')}</button>` : ''}${isAdmin() && page !== 'solicitacoes' && !(page === 'usuarios' && r.user_id === user.id) ? `<button class="icon-button" data-delete="${r.id}" aria-label="Excluir registro">${icon('trash-2')}</button>` : ''}</div></td></tr>`
         )
         .join('')}</tbody></table></div>`
     : '<p class="empty-state">Nenhum registro encontrado.</p>';
@@ -225,6 +254,31 @@ function renderRows() {
   document
     .querySelectorAll('[data-delete]')
     .forEach((b) => (b.onclick = () => deleteRecord(rows.find((r) => r.id === b.dataset.delete))));
+  if (page === 'solicitacoes') {
+    document.querySelectorAll('[data-view]').forEach((button) => {
+      const r = rows.find((row) => row.id === button.dataset.view);
+      if (r.status !== 'Aprovada' || !r.beneficiaria_id) return;
+      const schedule = document.createElement('button');
+      schedule.className = 'icon-button';
+      schedule.setAttribute('aria-label', 'Agendar atendimento');
+      schedule.innerHTML = icon('calendar-plus');
+      schedule.onclick = async () => {
+        try {
+          await loadAppointmentOptions();
+          await editRecord(null, schemas.atendimentos, {
+            beneficiaria_id: r.beneficiaria_id,
+            tipo_atendimento: r.servico_nome,
+            data_atendimento: `${r.data_preferencia}T${r.horario_preferencia}`,
+            status: 'Agendada',
+            solicitacao_id: r.id,
+          });
+        } catch (error) {
+          notify(supabaseErrorMessage(error), true);
+        }
+      };
+      button.parentElement.append(schedule);
+    });
+  }
   refreshIcons();
 }
 async function viewRecord(record) {
@@ -262,14 +316,18 @@ function fieldHTML(field, record) {
     return `<label class="checkbox full"><input type="checkbox" name="${field.key}" ${(value ?? field.key === 'ativo') ? 'checked' : ''}>${esc(field.label)}</label>`;
   if (field.type === 'image')
     return `<label class="field full">${esc(field.label)}<input type="file" name="${field.key}" accept="image/jpeg,image/png,image/webp"><small>JPG, PNG ou WebP, até 10 MB. ${value ? 'Uma imagem já está cadastrada. Escolha um arquivo para substituí-la.' : ''}</small></label>`;
-  const disabled = record && ['beneficiaria_id', 'user_id'].includes(field.key);
+  const disabled = record?.id && ['beneficiaria_id', 'user_id'].includes(field.key);
   const attrs = `name="${field.key}" ${field.required ? 'required' : ''} ${disabled ? 'disabled' : ''}`;
   let input;
   if (field.type === 'select') {
     const options =
       field.key === 'beneficiaria_id'
         ? linkedBeneficiaries.map((b) => [b.id, b.nome])
-        : field.options.map((o) => [o, o]);
+        : field.key === 'profissional_id'
+          ? professionals
+              .filter((p) => p.ativo || p.id === value)
+              .map((p) => [p.id, `${p.nome} — ${p.especialidade}`])
+          : field.options.map((o) => [o, o]);
     input = `<select ${attrs}><option value="">Selecione</option>${options.map(([v, l]) => `<option value="${esc(v)}" ${value === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>`;
   } else if (field.type === 'textarea')
     input = `<textarea ${attrs} maxlength="4000">${esc(value)}</textarea>`;
@@ -301,11 +359,14 @@ async function uploadFile(file, folder) {
     throw new Error('Não foi possível enviar o arquivo. Verifique as permissões do Storage.');
   return path;
 }
-async function editRecord(record) {
-  const schema = schemas[page];
+async function loadAppointmentOptions() {
+  linkedBeneficiaries = await readAll('beneficiarias', 'id,nome,created_at');
+  professionals = await readAll('profissionais');
+}
+async function editRecord(record, schema = schemas[page], defaults = {}) {
   const dialog = showDialog(
     record ? 'Editar registro' : schema.create,
-    `<form id="record-form"><div class="form-grid">${schema.fields.map((f) => fieldHTML(f, record)).join('')}</div><div class="form-actions"><button class="button" type="submit">Salvar ${icon('check')}</button><button class="text-button" id="cancel-edit" type="button">Cancelar</button></div><p class="form-status" role="status"></p></form>`
+    `<form id="record-form"><div class="form-grid">${schema.fields.map((f) => fieldHTML(f, record || defaults)).join('')}</div><div class="form-actions"><button class="button" type="submit">Salvar ${icon('check')}</button><button class="text-button" id="cancel-edit" type="button">Cancelar</button></div><p class="form-status" role="status"></p></form>`
   );
   dialog.querySelector('#cancel-edit').onclick = () => dialog.close();
   dialog.querySelector('form').onsubmit = async (event) => {
@@ -329,9 +390,10 @@ async function editRecord(record) {
       }
       if (values.data_inicio && values.data_fim && values.data_fim < values.data_inicio)
         throw new Error('A data final deve ser igual ou posterior à data inicial.');
-      if (page === 'atendimentos') {
+      if (schema.table === 'atendimentos') {
         values.data_atendimento = new Date(values.data_atendimento).toISOString();
         if (!record) values.funcionario_id = user.id;
+        if (!record && defaults.solicitacao_id) values.solicitacao_id = defaults.solicitacao_id;
       }
       if (
         page === 'usuarios' &&
@@ -345,9 +407,12 @@ async function editRecord(record) {
       const { error } = await query;
       if (error)
         throw new Error(
-          page === 'usuarios'
+          schema.table === 'perfis'
             ? 'Não foi possível salvar. Confirme se a conta Auth existe, se o UUID já tem perfil e se você tem permissão.'
-            : 'Não foi possível salvar. Confira os campos e suas permissões.'
+            : supabaseErrorMessage(
+                error,
+                'Não foi possível salvar. Confira os campos e suas permissões.'
+              )
         );
       dialog.close();
       notify('Registro salvo com sucesso.');
@@ -473,7 +538,7 @@ async function renderDashboard() {
       ],
       [
         'Atendimentos concluídos',
-        a.filter((r) => r.status === 'Finalizado').length,
+        a.filter((r) => ['Finalizado', 'Realizada'].includes(r.status)).length,
         'circle-check',
       ],
       ['Total de projetos', projects.filter((r) => within(r.created_at)).length, 'sprout'],
@@ -485,7 +550,7 @@ async function renderDashboard() {
           'Mulheres com atendimento',
           new Set(
             a
-              .filter((r) => r.status === 'Em atendimento' || r.status === 'Finalizado')
+              .filter((r) => ['Em atendimento', 'Finalizado', 'Realizada'].includes(r.status))
               .map((r) => r.beneficiaria_id)
           ).size,
           'users-round',

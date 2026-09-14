@@ -6,7 +6,7 @@ async function mockSupabase(page, role = 'admin') {
       contentType: 'application/javascript',
       body: `
     const user={id:'11111111-1111-4111-8111-111111111111'};
-    const db={perfis:[{id:'p1',user_id:user.id,nome:'Equipe de teste',email:'teste@example.com',role:'${role}',created_at:'2026-09-01'}],beneficiarias:[{id:'b1',nome:'Pessoa fictícia',status:'Pendente',tipo_atendimento:'Social',created_at:'2026-09-01'}],atendimentos:[],servicos:[{id:'s1',nome:'Serviço de teste',descricao:'Descrição de teste',ativo:true,created_at:'2026-09-01'}],projetos:[],doacoes:[],mensagens:[]};
+    const db={perfis:[{id:'p1',user_id:user.id,nome:'Equipe de teste',email:'teste@example.com',role:'${role}',created_at:'2026-09-01'}],beneficiarias:[{id:'b1',usuario_id:'u1',nome:'Pessoa fictícia',status:'Pendente',tipo_atendimento:'Social',created_at:'2026-09-01'}],atendimentos:[],profissionais:[],solicitacoes:[{id:'req1',usuario_id:'u1',servico_id:'s1',status:'Aprovada',data_preferencia:'2026-10-01',horario_preferencia:'10:00',motivo:'Teste'}],servicos:[{id:'s1',nome:'Serviço de teste',descricao:'Descrição de teste',ativo:true,created_at:'2026-09-01'}],projetos:[],doacoes:[],mensagens:[]};
     function query(table){let action='read',payload,filters=[],single=false,from=0,to=99999;const q={select(){return q},order(){return q},eq(k,v){filters.push(r=>r[k]===v);return q},range(a,b){from=a;to=b;return q},maybeSingle(){single=true;return q},single(){single=true;return q},insert(v){action='insert';payload=v;return q},update(v){action='update';payload=v;return q},delete(){action='delete';return q},then(resolve,reject){try{let rows=db[table].filter(r=>filters.every(f=>f(r)));if(action==='insert'){const r={id:crypto.randomUUID(),created_at:new Date().toISOString(),...payload};db[table].push(r);rows=[r]}if(action==='update')rows.forEach(r=>Object.assign(r,payload));if(action==='delete')db[table]=db[table].filter(r=>!rows.includes(r));const data=single?rows[0]??null:rows.slice(from,to+1);resolve({data,error:null})}catch(e){reject(e)}}};return q;}
     export const configured=true;
     export const supabase={from:query,auth:{getUser:async()=>({data:{user},error:null}),onAuthStateChange:()=>{},signOut:async()=>({error:null})},storage:{from:()=>({list:async()=>({data:[],error:null})})}};
@@ -74,4 +74,19 @@ test('reports render aggregates and export a CSV', async ({ page }) => {
   await page.getByRole('button', { name: 'Exportar resumo CSV' }).click();
   const download = await downloadPromise;
   expect(download.suggestedFilename()).toBe('relatorio-casa-mamae-margarida.csv');
+});
+
+test('staff schedules an approved user request in the existing appointments flow', async ({
+  page,
+}) => {
+  await mockSupabase(page, 'funcionario');
+  await page.goto('/solicitacoes.html');
+  await page.getByRole('button', { name: 'Agendar atendimento' }).click();
+  await expect(page.getByLabel('Beneficiária *')).toHaveValue('b1');
+  await expect(page.getByLabel('Tipo de atendimento')).toHaveValue('Serviço de teste');
+  await page.getByLabel('Descrição interna').fill('Informação restrita à equipe.');
+  await page.getByLabel('Orientação visível à usuária').fill('Chegue 10 minutos antes.');
+  await page.getByRole('button', { name: 'Salvar', exact: true }).click();
+  await expect(page.getByRole('dialog')).not.toBeVisible();
+  await expect(page.locator('#notification')).toContainText('Registro salvo');
 });
