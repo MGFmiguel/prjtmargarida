@@ -292,8 +292,8 @@ p {
   gap: 12px;
   align-items: center;
   margin-top: 32px;
-  font-size: 11px;
-  color: #67665f;
+  font-size: 12px;
+  color: var(--ink);
 }
 .reassurance-icon {
   width: 35px;
@@ -357,7 +357,7 @@ p {
   left: -3px;
   bottom: 76px;
   font-size: 44px;
-  color: #b67f79;
+  color: var(--ink);
 }
 .floating-note {
   position: absolute;
