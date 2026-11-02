@@ -3,11 +3,12 @@ export const brand = `<a class="brand" href="index.html" aria-label="Casa Mamãe
 export function publicLayout() {
   const current = location.pathname.split('/').pop() || 'index.html';
   document.querySelector('#site-header').innerHTML =
-    `<div class="topbar"><span>Um lugar de acolhimento. Um novo começo.</span><a href="doacoes.html">Faça parte dessa transformação ${icon('arrow-up-right')}</a></div><div class="nav-wrap container">${brand}<button class="menu-toggle icon-button" aria-label="Abrir menu" aria-expanded="false">${icon('menu')}</button><nav aria-label="Menu principal"><a href="index.html" ${current === 'index.html' ? 'class="active" aria-current="page"' : ''}>Início</a><a href="index.html#sobre">Sobre nós</a><a href="index.html#servicos">Serviços</a><a href="index.html#projetos">Projetos</a><a href="doacoes.html" ${current === 'doacoes.html' ? 'class="active"' : ''}>Doações</a><a href="contato.html" ${current === 'contato.html' ? 'class="active"' : ''}>Contato</a><a class="login-link" href="area-usuario.html">${icon('user-round')} Área da usuária</a><a class="button small" href="solicitar-atendimento.html">Solicitar atendimento ${icon('arrow-up-right')}</a></nav></div>`;
+    `<div class="topbar"><span>Um lugar de acolhimento. Um novo começo.</span><a href="doacoes.html">Faça parte dessa transformação ${icon('arrow-up-right')}</a></div><div class="nav-wrap container">${brand}<button class="menu-toggle icon-button" aria-label="Abrir menu" aria-expanded="false">${icon('menu')}</button><nav aria-label="Menu principal"><a href="index.html" ${current === 'index.html' ? 'class="active" aria-current="page"' : ''}>Início</a><a href="index.html#sobre">Sobre nós</a><a href="index.html#servicos">Cursos</a><a href="index.html#projetos">Projetos</a><a href="doacoes.html" ${current === 'doacoes.html' ? 'class="active"' : ''}>Doações</a><a href="contato.html" ${current === 'contato.html' ? 'class="active"' : ''}>Contato</a><a class="login-link" href="area-usuario.html">${icon('user-round')} Área da usuária</a><a class="button small" href="solicitar-atendimento.html">Solicitar atendimento ${icon('arrow-up-right')}</a></nav></div>`;
   document.querySelector('.menu-toggle').onclick = (e) => {
     const button = e.currentTarget;
     const open = button.getAttribute('aria-expanded') !== 'true';
     button.setAttribute('aria-expanded', open);
+    s;
     document.querySelector('.nav-wrap nav').classList.toggle('open', open);
   };
   document.querySelectorAll('.nav-wrap nav a').forEach((a) =>
