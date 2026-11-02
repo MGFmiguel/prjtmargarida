@@ -168,8 +168,9 @@ p {
   display: flex;
   align-items: center;
   gap: 23px;
-  font-size: 12px;
-  font-weight: 500;
+  color: #292b28;
+  font-size: 13px;
+  font-weight: 600;
 }
 .nav-wrap nav > a:not(.button) {
   position: relative;
@@ -1068,7 +1069,7 @@ dialog p {
   }
   .nav-wrap nav {
     gap: 16px;
-    font-size: 11px;
+    font-size: 12px;
   }
   .nav-wrap .button.small {
     font-size: 10px;
