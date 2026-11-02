@@ -385,18 +385,18 @@ p {
 }
 .floating-note small {
   display: block;
-  color: var(--muted);
+  color: var(--ink);
   font-family: var(--sans);
-  font-size: 10px;
+  font-size: 12px;
   margin-top: 2px;
 }
 .photo-caption {
   display: block;
   text-align: right;
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 2px;
   margin-top: 15px;
-  color: #838171;
+  color: var(--ink);
   padding-right: 8px;
 }
 .values-strip {
