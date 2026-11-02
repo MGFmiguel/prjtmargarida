@@ -357,7 +357,7 @@ p {
   left: -3px;
   bottom: 76px;
   font-size: 44px;
-  color: var(--ink);
+  color: #b67f79;
 }
 .floating-note {
   position: absolute;
