@@ -101,7 +101,7 @@ h3 {
   line-height: 1.4;
 }
 p {
-  color: var(--muted);
+  color: var(--ink);
 }
 .container {
   width: min(1240px, calc(100% - 100px));
