@@ -387,7 +387,7 @@ p {
   display: block;
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 11px;
   margin-top: 2px;
 }
 .photo-caption {
@@ -415,6 +415,7 @@ p {
   gap: 13px;
   font-size: 11px;
   border-right: 1px solid #dbdcd0;
+  color: var(--ink);
 }
 .values-strip span:first-child {
   justify-content: flex-start;
