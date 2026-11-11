@@ -5,24 +5,25 @@ import { services, projects } from './catalog.js';
 import { icon, refreshIcons, escapeHTML as esc, showDialog, dateBR } from './utils.js';
 publicLayout();
 let serviceData = services,
-  projectData = projects,
-  expanded = false;
-function renderServices() {
-  document.querySelector('#services-list').innerHTML =
-    serviceData
-      .slice(0, expanded ? undefined : 4)
+  projectData = projects;
+function renderCourses() {
+  const courses = serviceData.filter((service) =>
+    /curso|oficina|capacita|educa|aprendiz/i.test(`${service.nome} ${service.descricao}`)
+  );
+  document.querySelector('#courses-list').innerHTML =
+    courses
       .map(
-        (s, i) =>
-          `<article class="service-card"><span class="service-icon tone-${i % 4}">${icon(s.icon || ['hand-heart', 'brain', 'scissors', 'scale'][i % 4])}</span><h3>${esc(s.nome)}</h3><p>${esc(s.descricao)}</p><button class="text-button arrow-link" data-service="${esc(s.id)}">Saiba mais ${icon('arrow-up-right')}</button></article>`
+        (course) =>
+          `<article class="project-card"><div class="project-image">${course.imagem_url ? `<img src="${esc(safeImage(course.imagem_url))}" alt="" loading="lazy">` : icon(course.icon || 'book-open')}<span>CURSOS E OFICINAS</span></div><div class="project-copy"><h3>${esc(course.nome)}</h3><p>${esc(course.descricao)}</p><div class="project-bottom"><span>${icon('graduation-cap')} Aprendizado e autonomia</span><button class="icon-button" data-course="${esc(course.id)}" aria-label="Detalhes de ${esc(course.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
       )
-      .join('') || '<p class="empty-state">Os serviços serão publicados em breve.</p>';
-  document.querySelectorAll('[data-service]').forEach(
+      .join('') || '<p class="empty-state">Novos cursos serão divulgados em breve.</p>';
+  document.querySelectorAll('[data-course]').forEach(
     (button) =>
       (button.onclick = () => {
-        const s = serviceData.find((s) => String(s.id) === button.dataset.service);
+        const course = courses.find((item) => String(item.id) === button.dataset.course);
         showDialog(
-          s.nome,
-          `<p>${esc(s.descricao)}</p><p>Conte para a nossa equipe como podemos ajudar. A disponibilidade e os próximos passos serão confirmados após a análise da sua solicitação.</p><a class="button" href="solicitar-atendimento.html?servico=${encodeURIComponent(s.nome)}">Solicitar atendimento ${icon('arrow-up-right')}</a>`
+          course.nome,
+          `<p>${esc(course.descricao)}</p><p>Fale com a nossa equipe para saber sobre inscrições, disponibilidade e próximas turmas.</p><a class="button" href="contato.html?assunto=${encodeURIComponent(course.nome)}">Tenho interesse ${icon('arrow-up-right')}</a>`
         );
       })
   );
@@ -56,13 +57,6 @@ function safeImage(url) {
     return '';
   }
 }
-document.querySelector('#all-services').onclick = () => {
-  expanded = !expanded;
-  renderServices();
-  document.querySelector('#all-services').innerHTML =
-    `${expanded ? 'Mostrar menos serviços' : 'Conheça todos os serviços'} ${icon(expanded ? 'arrow-up' : 'arrow-right')}`;
-  refreshIcons();
-};
 const tabText = {
   missao:
     'Acolher e fortalecer mulheres, oferecendo cuidado, orientação e oportunidades para transformar suas próprias histórias.',
@@ -123,5 +117,5 @@ if (configured) {
   document.querySelector('#catalog-note').textContent =
     'Conteúdo ilustrativo. Serviços, projetos e programação serão confirmados pela instituição.';
 }
-renderServices();
+renderCourses();
 renderProjects();
