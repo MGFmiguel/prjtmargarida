@@ -64,9 +64,9 @@ export const schemas = {
   },
   servicos: {
     table: 'servicos',
-    title: 'Serviços',
-    subtitle: 'Cuidados e oportunidades oferecidos pela instituição.',
-    create: 'Cadastrar serviço',
+    title: 'Cursos',
+    subtitle: 'Cursos, oficinas e capacitações oferecidos pela instituição.',
+    create: 'Cadastrar curso',
     adminWrite: true,
     columns: [
       ['nome', 'Nome'],
@@ -75,10 +75,10 @@ export const schemas = {
       ['created_at', 'Cadastro'],
     ],
     fields: [
-      text('nome', 'Nome do serviço'),
+      text('nome', 'Nome do curso'),
       area('descricao', 'Descrição'),
-      { key: 'imagem_url', label: 'Imagem do serviço', type: 'image', folder: 'servicos' },
-      { key: 'ativo', label: 'Serviço ativo no site', type: 'checkbox' },
+      { key: 'imagem_url', label: 'Imagem do curso', type: 'image', folder: 'servicos' },
+      { key: 'ativo', label: 'Curso disponível no site', type: 'checkbox' },
     ],
   },
   projetos: {

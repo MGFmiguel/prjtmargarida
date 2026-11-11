@@ -4,6 +4,7 @@ import { icon, refreshIcons, escapeHTML as esc, dateBR, notify, showDialog } fro
 import { schemas, appointmentStatuses as statuses } from './admin-schema.js';
 import { supabaseErrorMessage } from './supabase-errors.js';
 const page = document.body.dataset.page;
+const schemaPage = page === 'cursos' ? 'servicos' : page;
 const content = document.querySelector('#admin-content');
 let profile,
   user,
@@ -19,7 +20,7 @@ const navigation = [
   ['atendimentos', 'calendar-heart', 'Atendimentos'],
   ['solicitacoes', 'clipboard-list', 'Solicitações das usuárias'],
   ['profissionais', 'contact-round', 'Profissionais'],
-  ['servicos', 'hand-heart', 'Serviços'],
+  ['cursos', 'book-open', 'Cursos'],
   ['projetos', 'sprout', 'Projetos'],
   ['gestao-doacoes', 'gift', 'Doações', true],
   ['relatorios', 'chart-no-axes-combined', 'Relatórios', true],
@@ -153,7 +154,7 @@ function format(key, value) {
   return esc(String(value).length > 105 ? String(value).slice(0, 105) + '…' : value);
 }
 async function renderCollection() {
-  const schema = schemas[page];
+  const schema = schemas[schemaPage];
   const canWrite = !schema.adminWrite || isAdmin();
   content.innerHTML =
     title(
@@ -210,7 +211,7 @@ async function renderCollection() {
   renderRows();
 }
 function renderRows() {
-  const schema = schemas[page];
+  const schema = schemas[schemaPage];
   const query = document.querySelector('#search').value.trim().toLocaleLowerCase('pt-BR');
   const status = document.querySelector('#status-filter').value;
   const filtered = rows.filter(
@@ -282,7 +283,7 @@ function renderRows() {
   refreshIcons();
 }
 async function viewRecord(record) {
-  const schema = schemas[page];
+  const schema = schemas[schemaPage];
   const fields = schema.details || [
     ...schema.fields.filter((f) => f.type !== 'image').map((f) => [f.key, f.label]),
     ['created_at', 'Cadastro'],
@@ -363,7 +364,7 @@ async function loadAppointmentOptions() {
   linkedBeneficiaries = await readAll('beneficiarias', 'id,nome,created_at');
   professionals = await readAll('profissionais');
 }
-async function editRecord(record, schema = schemas[page], defaults = {}) {
+async function editRecord(record, schema = schemas[schemaPage], defaults = {}) {
   const dialog = showDialog(
     record ? 'Editar registro' : schema.create,
     `<form id="record-form"><div class="form-grid">${schema.fields.map((f) => fieldHTML(f, record || defaults)).join('')}</div><div class="form-actions"><button class="button" type="submit">Salvar ${icon('check')}</button><button class="text-button" id="cancel-edit" type="button">Cancelar</button></div><p class="form-status" role="status"></p></form>`
@@ -439,7 +440,7 @@ function deleteRecord(record) {
   dialog.querySelector('#confirm-delete').onclick = async (event) => {
     event.currentTarget.disabled = true;
     const { data, error } = await supabase
-      .from(schemas[page].table)
+      .from(schemas[schemaPage].table)
       .delete()
       .eq('id', record.id)
       .select('id');
@@ -477,7 +478,7 @@ async function renderDashboard() {
       'id,beneficiaria_id,status,tipo_atendimento,data_atendimento,created_at'
     ),
     readAll('projetos', 'id,status,created_at'),
-    readAll('servicos', 'id,ativo,created_at'),
+    readAll('servicos', 'id,ativo,created_at,nome,descricao'),
     isAdmin() ? readAll('doacoes', 'id,status,created_at') : Promise.resolve([]),
   ]);
   const report = page === 'relatorios';
@@ -542,7 +543,7 @@ async function renderDashboard() {
         'circle-check',
       ],
       ['Total de projetos', projects.filter((r) => within(r.created_at)).length, 'sprout'],
-      ['Total de serviços', services.filter((r) => within(r.created_at)).length, 'hand-heart'],
+      ['Total de cursos', services.filter((r) => within(r.created_at) && /curso|oficina|capacita|educa|aprendiz/i.test(`${r.nome || ''} ${r.descricao || ''}`)).length, 'book-open'],
     ];
     if (report)
       summary.push(
@@ -639,7 +640,7 @@ async function renderDashboard() {
 async function renderSettings() {
   content.innerHTML =
     title('Configurações', 'Arquivos institucionais e documentos autorizados.') +
-    `<div class="settings-grid"><section class="panel"><h2>Enviar arquivo</h2><p>Imagens editoriais podem ser vistas pelo público. Documentos são privados e acessíveis somente à equipe autorizada.</p><form id="upload-form"><label class="field">Pasta<select name="folder"><option value="institucional">Imagens institucionais</option><option value="documentos">Documentos autorizados (privado)</option><option value="projetos">Imagens de projetos</option><option value="servicos">Imagens de serviços</option></select></label><label class="field">Arquivo<input type="file" name="file" required accept="image/jpeg,image/png,image/webp,application/pdf"><small>Até 10 MB. PDF apenas na pasta de documentos.</small></label><label class="checkbox" style="margin-top:18px"><input type="checkbox" required>Confirmo que tenho autorização para armazenar este arquivo e que documentos pessoais serão enviados somente à pasta privada.</label><button class="button">Enviar para o Storage ${icon('upload')}</button><p class="form-status" role="status"></p></form></section><section class="panel"><h2>Arquivos armazenados</h2><label class="field">Pasta<select id="files-folder"><option value="institucional">Institucional</option><option value="documentos">Documentos privados</option><option value="projetos">Projetos</option><option value="servicos">Serviços</option></select></label><p class="form-intro">Links de visualização expiram em 60 segundos. As imagens cadastradas nos serviços e projetos são publicadas automaticamente.</p><ul id="files-list" class="files-list"></ul></section><section class="panel"><h2>Identidade da instituição</h2><p>O símbolo de flor é um espaço reservado para o logotipo. Para usar o logo oficial, envie a imagem à pasta institucional e substitua o símbolo no componente <code>js/layout.js</code>.</p><p>Os textos institucionais, canais de contato e informações para Pix devem ser confirmados pela instituição antes da publicação.</p></section><section class="panel"><h2>Seu acesso</h2><p>${esc(profile.nome)}<br>${esc(profile.email)}<br>Perfil: administrador</p><p>Use a recuperação de senha para redefinir suas credenciais pelo e-mail cadastrado.</p><a class="button button-outline" href="login.html">Recuperação de senha</a></section></div>`;
+    `<div class="settings-grid"><section class="panel"><h2>Enviar arquivo</h2><p>Imagens editoriais podem ser vistas pelo público. Documentos são privados e acessíveis somente à equipe autorizada.</p><form id="upload-form"><label class="field">Pasta<select name="folder"><option value="institucional">Imagens institucionais</option><option value="documentos">Documentos autorizados (privado)</option><option value="projetos">Imagens de projetos</option><option value="servicos">Imagens de cursos</option></select></label><label class="field">Arquivo<input type="file" name="file" required accept="image/jpeg,image/png,image/webp,application/pdf"><small>Até 10 MB. PDF apenas na pasta de documentos.</small></label><label class="checkbox" style="margin-top:18px"><input type="checkbox" required>Confirmo que tenho autorização para armazenar este arquivo e que documentos pessoais serão enviados somente à pasta privada.</label><button class="button">Enviar para o Storage ${icon('upload')}</button><p class="form-status" role="status"></p></form></section><section class="panel"><h2>Arquivos armazenados</h2><label class="field">Pasta<select id="files-folder"><option value="institucional">Institucional</option><option value="documentos">Documentos privados</option><option value="projetos">Projetos</option><option value="servicos">Cursos</option></select></label><p class="form-intro">Links de visualização expiram em 60 segundos. As imagens cadastradas nos cursos e projetos são publicadas automaticamente.</p><ul id="files-list" class="files-list"></ul></section><section class="panel"><h2>Identidade da instituição</h2><p>O símbolo de flor é um espaço reservado para o logotipo. Para usar o logo oficial, envie a imagem à pasta institucional e substitua o símbolo no componente <code>js/layout.js</code>.</p><p>Os textos institucionais, canais de contato e informações para Pix devem ser confirmados pela instituição antes da publicação.</p></section><section class="panel"><h2>Seu acesso</h2><p>${esc(profile.nome)}<br>${esc(profile.email)}<br>Perfil: administrador</p><p>Use a recuperação de senha para redefinir suas credenciais pelo e-mail cadastrado.</p><a class="button button-outline" href="login.html">Recuperação de senha</a></section></div>`;
   document.querySelector('#files-folder').onchange = loadFiles;
   document.querySelector('#upload-form').onsubmit = async (e) => {
     e.preventDefault();

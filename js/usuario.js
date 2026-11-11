@@ -202,7 +202,7 @@ async function refreshData(initial = false) {
 }
 async function renderRequest() {
   const services = await all(() =>
-    supabase.from('servicos').select('id,nome').eq('ativo', true).order('nome').order('id')
+    supabase.from('servicos').select('id,nome,descricao').eq('ativo', true).order('nome').order('id')
   );
   content.innerHTML =
     heading(

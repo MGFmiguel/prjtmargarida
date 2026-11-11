@@ -11,6 +11,7 @@ const pages = [
   'dashboard',
   'beneficiarias',
   'atendimentos',
+  'cursos',
   'servicos',
   'projetos',
   'relatorios',

@@ -21,7 +21,7 @@ casa-mamae-margarida/
 ├── dashboard.html             Indicadores da equipe
 ├── beneficiarias.html         Consulta e status das solicitações
 ├── atendimentos.html          Cadastro, edição e consulta
-├── servicos.html              Gestão de serviços
+├── cursos.html                Gestão de cursos
 ├── projetos.html              Gestão de projetos
 ├── gestao-doacoes.html         Gestão privada de doações
 ├── mensagens.html             Mensagens recebidas
@@ -35,7 +35,7 @@ casa-mamae-margarida/
 ├── js/
 │   ├── supabase.js            Cliente e persistência da sessão
 │   ├── layout.js              Cabeçalho, rodapé e marca
-│   ├── main.js                Site, serviços, projetos e diálogos
+│   ├── main.js                Site, cursos, projetos e diálogos
 │   ├── catalog.js             Conteúdo ilustrativo sem credenciais
 │   ├── forms.js               Envio dos formulários públicos
 │   ├── login.js               Login e recuperação de senha
@@ -45,7 +45,7 @@ casa-mamae-margarida/
 ├── img/                       Fotografias ilustrativas e favicon
 ├── database/
 │   ├── supabase.sql           Banco, índices, restrições, RLS e bucket
-│   └── seed.sql               Serviços ilustrativos opcionais
+│   └── seed.sql               Catálogo ilustrativo opcional
 ├── tests/                     Testes de SQL, validação e navegador
 ├── scripts/create-pages.mjs   Gerador dos HTML secundários
 ├── .env.example               Modelo de configuração
@@ -66,7 +66,7 @@ npm.cmd run dev
 
 No Windows, `npm.cmd` evita o bloqueio do `npm.ps1` pela política de execução do PowerShell. Em macOS/Linux, use `npm`.
 
-**Teste:** abra o endereço exibido pelo Vite, normalmente `http://localhost:5173`. A página deve exibir a marca, a fotografia, os serviços e os projetos. Não abra o HTML com `file://`, pois os módulos precisam do servidor.
+**Teste:** abra o endereço exibido pelo Vite, normalmente `http://localhost:5173`. A página deve exibir a marca, a fotografia, os cursos e os projetos. Não abra o HTML com `file://`, pois os módulos precisam do servidor.
 
 ## 2. Criar o projeto no Supabase
 
@@ -84,7 +84,7 @@ Abra `database/supabase.sql`, copie todo o conteúdo e execute no SQL Editor de 
 
 O SQL cria as sete tabelas pedidas, PKs UUID, FKs, valores padrão, índices, validação de CPF, datas, campos de consentimento, RLS e políticas do Storage. Consentimento e sua data foram acrescentados para registrar a autorização do formulário. O CPF não é único: uma mesma mulher pode enviar mais de uma solicitação. Antes de criar atendimentos, a equipe deve conferir se há cadastros duplicados.
 
-Opcionalmente, execute `database/seed.sql` para cadastrar os oito serviços ilustrativos. Confirme a disponibilidade com a instituição antes de publicá-los. Não são inseridas pessoas, doações ou atendimentos fictícios no banco real.
+Opcionalmente, execute `database/seed.sql` para cadastrar o catálogo ilustrativo. Confirme a disponibilidade com a instituição antes de publicá-lo. Não são inseridas pessoas, doações ou atendimentos fictícios no banco real.
 
 **Teste:** no Table Editor, confira `perfis`, `beneficiarias`, `atendimentos`, `servicos`, `projetos`, `doacoes` e `mensagens`. Todas devem ter RLS habilitada. No Storage deve existir o bucket privado `casa-mamae-margarida`.
 
@@ -109,15 +109,15 @@ Nunca use `service_role`, `sb_secret_...` nem a senha do banco no frontend. Vari
 
 O arquivo `js/supabase.js` importa `createClient` de `@supabase/supabase-js`, lê essas variáveis e configura a sessão. Reinicie o Vite após alterar `.env`.
 
-**Teste:** os serviços devem ser carregados do seu banco. Um banco vazio mostra estado vazio, e um erro de conexão mostra uma mensagem, sem substituir dados reais por dados ilustrativos.
+**Teste:** os cursos devem ser carregados do seu banco. Um banco vazio mostra estado vazio, e um erro de conexão mostra uma mensagem, sem substituir dados reais por dados ilustrativos.
 
 ## 5. Página inicial
 
-`index.html`, `css/style.css`, `js/layout.js` e `js/main.js` implementam navegação, banner, apresentação, missão, visão, valores, serviços, projetos, convite para doação, contato e rodapé. O layout usa rosa queimado, bege, branco e dourado suave.
+`index.html`, `css/style.css`, `js/layout.js` e `js/main.js` implementam navegação, banner, apresentação, missão, visão, valores, cursos, projetos, convite para doação, contato e rodapé. O layout usa rosa queimado, bege, branco e dourado suave.
 
 A flor da marca é um espaço reservado para o logotipo oficial. Substitua o símbolo no componente `brand` de `js/layout.js`. Atualize também `img/favicon.svg` quando houver um ícone oficial.
 
-**Teste:** clique nos itens do menu, abra “Saiba mais”, expanda os serviços, alterne missão/visão/valores e abra um projeto. Em uma tela estreita, teste o botão do menu. Use Tab, Enter e Escape nos diálogos.
+**Teste:** clique nos itens do menu, abra os detalhes de um curso, alterne missão/visão/valores e abra um projeto. Em uma tela estreita, teste o botão do menu. Use Tab, Enter e Escape nos diálogos.
 
 ## 6. Login
 
@@ -169,11 +169,11 @@ Uma beneficiária pode ter vários atendimentos. O histórico da beneficiária m
 
 **Teste:** crie dois atendimentos para o mesmo cadastro, finalize um deles e abra o histórico na tela de beneficiárias. Confirme que os dois aparecem e que o painel atualiza suas contagens.
 
-## 11. Serviços
+## 11. Cursos
 
-Administradores cadastram, editam, ativam/desativam e excluem serviços em `servicos.html`. Funcionários podem consultar. O formulário aceita imagem e envia ao Storage. O site público exibe somente serviços ativos.
+Administradores cadastram, editam, ativam/desativam e excluem cursos em `cursos.html`. Funcionários podem consultar. O formulário aceita imagem e envia ao Storage. O site público exibe somente cursos ativos. Para compatibilidade com os dados existentes, o cadastro continua armazenado na tabela `servicos` e as imagens usam a pasta `servicos/`.
 
-**Teste:** cadastre um serviço e confira o site. Desative-o e recarregue: ele deve desaparecer do catálogo público, mas continuar visível para a equipe.
+**Teste:** cadastre um curso e confira o site. Desative-o e recarregue: ele deve desaparecer do catálogo público, mas continuar visível para a equipe.
 
 ## 12. Projetos e Storage
 
@@ -195,7 +195,7 @@ O administrador acompanha o status em `gestao-doacoes.html`. Mensagens de `conta
 
 ## 14. Relatórios
 
-`relatorios.html` oferece filtros de período, status e tipo de atendimento, indicadores, gráficos e download CSV agregado. Solicitações usam sua data de cadastro; atendimentos usam a data do encontro. Projetos, serviços e doações usam a data de cadastro e não o status do atendimento. “Mulheres com atendimento” conta IDs distintos de beneficiárias com encontros em andamento ou finalizados; possíveis cadastros duplicados precisam ser resolvidos pela equipe.
+`relatorios.html` oferece filtros de período, status e tipo de atendimento, indicadores, gráficos e download CSV agregado. Solicitações usam sua data de cadastro; atendimentos usam a data do encontro. Projetos, cursos e doações usam a data de cadastro e não o status do atendimento. “Mulheres com atendimento” conta IDs distintos de beneficiárias com encontros em andamento ou finalizados; possíveis cadastros duplicados precisam ser resolvidos pela equipe.
 
 **Teste:** crie encontros em dois meses diferentes, filtre um deles e compare as contagens. Informe um período invertido para conferir a validação. O CSV deve incluir os filtros e os indicadores, sem nomes, CPFs ou endereços.
 
@@ -203,7 +203,7 @@ O administrador acompanha o status em `gestao-doacoes.html`. Mensagens de `conta
 
 | Recurso                  | Visitante          | Funcionário                  | Administrador                         |
 | ------------------------ | ------------------ | ---------------------------- | ------------------------------------- |
-| Serviços/projetos ativos | Ler                | Ler todos                    | Gerenciar                             |
+| Cursos/projetos ativos    | Ler                | Ler todos                    | Gerenciar                             |
 | Beneficiárias            | Enviar solicitação | Consultar e atualizar status | Consultar, atualizar status e excluir |
 | Atendimentos             | Sem acesso         | Criar, consultar e atualizar | Gerenciar                             |
 | Doações/mensagens        | Enviar formulário  | Sem leitura                  | Gerenciar                             |
@@ -237,7 +237,7 @@ Os testes Playwright públicos simulam o cliente sem configuração, mesmo com `
 
 ## 17. Publicação
 
-1. Confirme textos, logo, serviços disponíveis, imagens autorizadas, contatos, programação e informações de doação com a instituição.
+1. Confirme textos, logo, cursos disponíveis, imagens autorizadas, contatos, programação e informações de doação com a instituição.
 2. Configure o Supabase e valide o fluxo completo em homologação.
 3. Execute `npm.cmd run build`. O resultado estará em `dist/`, com todas as páginas HTML.
 4. Em uma hospedagem estática, publique a pasta `dist`. No Netlify, o arquivo `netlify.toml` já define `npm run build`, `dist` e cabeçalhos básicos. Veja [Vite no Netlify](https://docs.netlify.com/build/frameworks/framework-setup-guides/vite/).

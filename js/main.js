@@ -115,7 +115,7 @@ if (configured) {
   }
 } else {
   document.querySelector('#catalog-note').textContent =
-    'Conteúdo ilustrativo. Serviços, projetos e programação serão confirmados pela instituição.';
+    'Conteúdo ilustrativo. Cursos, projetos e programação serão confirmados pela instituição.';
 }
 renderCourses();
 renderProjects();

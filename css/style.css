@@ -468,63 +468,6 @@ p {
   line-height: 1.9;
   padding-bottom: 3px;
 }
-.service-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 19px;
-}
-.service-card {
-  background: #fffdfa;
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  padding: 26px 24px 23px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-}
-.service-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px #48322609;
-}
-.service-icon {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  background: #f6e7e4;
-  color: #a56770;
-  border-radius: 13px;
-  margin-bottom: 20px;
-}
-.service-icon svg {
-  width: 25px;
-  height: 25px;
-}
-.tone-1 {
-  background: #edeedf;
-  color: #8b9472;
-}
-.tone-2 {
-  background: #f4edde;
-  color: #ad9369;
-}
-.tone-3 {
-  background: #ede7ee;
-  color: #9c819b;
-}
-.service-card h3 {
-  font-size: 15px;
-  margin-bottom: 10px;
-}
-.service-card p {
-  font-size: 12px;
-  line-height: 1.85;
-  flex: 1;
-  margin-bottom: 20px;
-}
 .text-button {
   border: 0;
   background: none;
@@ -1122,9 +1065,6 @@ dialog p {
   .floating-note {
     bottom: 50px;
   }
-  .service-card {
-    padding: 22px 18px;
-  }
   .about-grid {
     gap: 45px;
   }
@@ -1201,9 +1141,6 @@ dialog p {
   }
   .values-strip svg {
     width: 18px;
-  }
-  .service-grid {
-    grid-template-columns: repeat(2, 1fr);
   }
   .section-heading h2 {
     font-size: 31px;
@@ -1345,23 +1282,6 @@ dialog p {
   .eyebrow {
     font-size: 8px;
     letter-spacing: 1.5px;
-  }
-  .service-grid {
-    gap: 12px;
-  }
-  .service-card {
-    padding: 19px 15px;
-  }
-  .service-card h3 {
-    font-size: 13px;
-  }
-  .service-card p {
-    font-size: 11px;
-  }
-  .service-icon {
-    width: 41px;
-    height: 41px;
-    margin-bottom: 16px;
   }
   .section-bottom {
     gap: 15px;
