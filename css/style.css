@@ -647,6 +647,13 @@ p {
   width: 14px;
   height: 14px;
 }
+.course-status {
+  border-radius: 20px;
+  background: var(--blush);
+  color: var(--rose-dark);
+  padding: 4px 8px;
+  white-space: nowrap;
+}
 .icon-button {
   border: 0;
   background: transparent;

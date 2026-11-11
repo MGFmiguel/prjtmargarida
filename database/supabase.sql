@@ -14,7 +14,10 @@ create table public.perfis (
 create table public.servicos (
   id uuid primary key default gen_random_uuid(), nome text not null check(length(trim(nome)) between 3 and 250),
   descricao text not null check(length(descricao) between 3 and 4000), imagem_url text,
-  ativo boolean not null default true, created_at timestamptz not null default now()
+  data_inicio date, data_fim date,
+  status text not null default 'Inscrições abertas' check(status in ('Inscrições abertas','Em breve','Em andamento','Encerrado')),
+  ativo boolean not null default true, created_at timestamptz not null default now(),
+  check(data_fim is null or data_inicio is null or data_fim >= data_inicio)
 );
 create or replace function public.cpf_valido(cpf text) returns boolean
 language plpgsql immutable set search_path = '' as $$

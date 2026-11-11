@@ -171,7 +171,7 @@ Uma beneficiária pode ter vários atendimentos. O histórico da beneficiária m
 
 ## 11. Cursos
 
-Administradores cadastram, editam, ativam/desativam e excluem cursos em `cursos.html`. Funcionários podem consultar. O formulário aceita imagem e envia ao Storage. O site público exibe somente cursos ativos. Para compatibilidade com os dados existentes, o cadastro continua armazenado na tabela `servicos` e as imagens usam a pasta `servicos/`.
+Administradores cadastram, editam, ativam/desativam e excluem cursos em `cursos.html`. Também informam início, fim e status da turma. Em bancos existentes, execute `database/migrations/003_cursos_datas_status.sql` no SQL Editor do Supabase antes de usar esses campos. Para compatibilidade com os dados existentes, os cursos continuam armazenados na tabela `servicos` e as imagens usam a pasta `servicos/`.
 
 **Teste:** cadastre um curso e confira o site. Desative-o e recarregue: ele deve desaparecer do catálogo público, mas continuar visível para a equipe.
 

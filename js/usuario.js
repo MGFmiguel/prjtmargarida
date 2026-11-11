@@ -78,10 +78,18 @@ function renderCourses() {
   const list = courses
     .map(
       (course) =>
-        `<article class="project-card"><div class="project-image">${course.imagem_url ? `<img src="${esc(course.imagem_url)}" alt="" loading="lazy">` : icon('book-open')}<span>CURSOS E OFICINAS</span></div><div class="project-copy"><h3>${esc(course.nome)}</h3><p>${esc(course.descricao || '')}</p><div class="project-bottom"><span>${icon('graduation-cap')} Consulte as próximas turmas</span><button class="icon-button" data-user-course="${esc(course.id)}" aria-label="Detalhes de ${esc(course.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
+        `<article class="project-card"><div class="project-image">${course.imagem_url ? `<img src="${esc(course.imagem_url)}" alt="" loading="lazy">` : icon('book-open')}<span>CURSOS E OFICINAS</span></div><div class="project-copy"><h3>${esc(course.nome)}</h3><p>${esc(course.descricao || '')}</p><div class="project-bottom"><span>${icon('calendar-days')} ${coursePeriod(course)}</span><span class="course-status">${esc(course.status || 'Inscrições abertas')}</span><button class="icon-button" data-user-course="${esc(course.id)}" aria-label="Detalhes de ${esc(course.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
     )
     .join('');
   return list || empty('Novos cursos serão divulgados em breve.');
+}
+function coursePeriod(course) {
+  const start = course.data_inicio ? dateBR(course.data_inicio) : '';
+  const end = course.data_fim ? dateBR(course.data_fim) : '';
+  if (start && end) return `${start} a ${end}`;
+  if (start) return `A partir de ${start}`;
+  if (end) return `Até ${end}`;
+  return 'Datas a confirmar';
 }
 function updateBadge() {
   const count = notifications.filter((n) => !n.lida).length;
@@ -104,7 +112,7 @@ function renderData() {
         const course = courses.find((item) => String(item.id) === button.dataset.userCourse);
         showDialog(
           course.nome,
-          `<p>${esc(course.descricao || '')}</p><p>Fale com a nossa equipe para saber sobre inscrições, disponibilidade e próximas turmas.</p><a class="button" href="contato.html?assunto=${encodeURIComponent(course.nome)}">Tenho interesse ${icon('arrow-up-right')}</a>`
+          `<p>${esc(course.descricao || '')}</p><p>Período: ${esc(coursePeriod(course))}. Status: ${esc(course.status || 'Inscrições abertas')}.</p><p>Fale com a nossa equipe para saber sobre disponibilidade e próximas turmas.</p><a class="button" href="contato.html?assunto=${encodeURIComponent(course.nome)}">Tenho interesse ${icon('arrow-up-right')}</a>`
         );
       };
     });
@@ -203,7 +211,7 @@ async function refreshData(initial = false) {
     ]);
     [appointments, requests, notifications] = values;
     courses = page === 'area-usuario'
-      ? await all(() => supabase.from('servicos').select('id,nome,descricao,imagem_url').eq('ativo', true).order('created_at'))
+      ? await all(() => supabase.from('servicos').select('id,nome,descricao,imagem_url,data_inicio,data_fim,status').eq('ativo', true).order('created_at'))
       : [];
     for (const course of courses) {
       if (course.imagem_url && !course.imagem_url.startsWith('https://')) {
