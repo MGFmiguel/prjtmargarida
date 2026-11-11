@@ -543,7 +543,7 @@ async function renderDashboard() {
         'circle-check',
       ],
       ['Total de projetos', projects.filter((r) => within(r.created_at)).length, 'sprout'],
-      ['Total de cursos', services.filter((r) => within(r.created_at) && /curso|oficina|capacita|educa|aprendiz/i.test(`${r.nome || ''} ${r.descricao || ''}`)).length, 'book-open'],
+      ['Total de cursos', services.filter((r) => within(r.created_at)).length, 'book-open'],
     ];
     if (report)
       summary.push(

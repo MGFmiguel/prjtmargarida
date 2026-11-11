@@ -4,12 +4,12 @@ import { supabase, configured } from './supabase.js';
 import { services, projects } from './catalog.js';
 import { icon, refreshIcons, escapeHTML as esc, showDialog, dateBR } from './utils.js';
 publicLayout();
-let serviceData = services,
+let serviceData = services.filter((service) =>
+    /curso|oficina|capacita|educa|aprendiz/i.test(`${service.nome} ${service.descricao}`)
+  ),
   projectData = projects;
 function renderCourses() {
-  const courses = serviceData.filter((service) =>
-    /curso|oficina|capacita|educa|aprendiz/i.test(`${service.nome} ${service.descricao}`)
-  );
+  const courses = serviceData;
   document.querySelector('#courses-list').innerHTML =
     courses
       .map(
