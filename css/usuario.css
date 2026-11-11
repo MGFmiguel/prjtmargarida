@@ -51,6 +51,9 @@
   grid-template-columns: 1.2fr 1fr;
   gap: 22px;
 }
+.user-courses {
+  margin-top: 36px;
+}
 .appointment-list {
   display: grid;
   gap: 15px;

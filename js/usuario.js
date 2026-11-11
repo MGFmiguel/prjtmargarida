@@ -1,6 +1,6 @@
 import { supabase, configured } from './supabase.js';
 import { brand } from './layout.js';
-import { icon, refreshIcons, escapeHTML as esc, dateBR, notify } from './utils.js';
+import { icon, refreshIcons, escapeHTML as esc, dateBR, notify, showDialog } from './utils.js';
 import { supabaseErrorMessage } from './supabase-errors.js';
 import { destinationForRole } from './auth-routing.js';
 import { upcomingAppointments, agendaGroups } from './usuario-data.js';
@@ -20,6 +20,7 @@ let user,
   profile,
   appointments = [],
   requests = [],
+  courses = [],
   notifications = [],
   busy = false,
   timer;
@@ -73,6 +74,15 @@ function appointmentCard(row, compact = false) {
   const date = new Date(row.data_atendimento);
   return `<article class="appointment-card"><div class="appointment-date"><strong>${date.getDate()}</strong><small>${date.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })}</small></div><div class="appointment-info"><h3>${esc(row.tipo_atendimento)}</h3><p>${esc(row.profissional || 'Profissional a confirmar')}</p><div class="appointment-meta"><span>${icon('clock-3')}${timeBR(row.data_atendimento)}</span><span>${icon('map-pin')}${esc(row.local || 'Local a confirmar')}</span></div>${!compact && row.observacao_usuario ? `<p>${esc(row.observacao_usuario)}</p>` : ''}</div>${badge(row.status)}</article>`;
 }
+function renderCourses() {
+  const list = courses
+    .map(
+      (course) =>
+        `<article class="project-card"><div class="project-image">${course.imagem_url ? `<img src="${esc(course.imagem_url)}" alt="" loading="lazy">` : icon('book-open')}<span>CURSOS E OFICINAS</span></div><div class="project-copy"><h3>${esc(course.nome)}</h3><p>${esc(course.descricao || '')}</p><div class="project-bottom"><span>${icon('graduation-cap')} Consulte as próximas turmas</span><button class="icon-button" data-user-course="${esc(course.id)}" aria-label="Detalhes de ${esc(course.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
+    )
+    .join('');
+  return list || empty('Novos cursos serão divulgados em breve.');
+}
 function updateBadge() {
   const count = notifications.filter((n) => !n.lida).length;
   const node = document.querySelector('#notification-count');
@@ -88,7 +98,16 @@ function renderData() {
         .slice(0, 3)
         .map((a) => appointmentCard(a, true))
         .join('') || empty('Quando um atendimento for agendado, ele aparecerá aqui.')
-    }</div><a class="button" style="margin-top:20px" href="nova-solicitacao.html">Solicitar atendimento ${icon('arrow-up-right')}</a></section><section class="panel"><h2>Novidades para você</h2>${notifications.slice(0, 3).map(notificationCard).join('') || empty('Nenhuma novidade por enquanto.')}<a class="text-button" href="notificacoes.html">Ver todas as notificações</a></section></div>`;
+    }</div><a class="button" style="margin-top:20px" href="nova-solicitacao.html">Solicitar atendimento ${icon('arrow-up-right')}</a></section><section class="panel"><h2>Novidades para você</h2>${notifications.slice(0, 3).map(notificationCard).join('') || empty('Nenhuma novidade por enquanto.')}<a class="text-button" href="notificacoes.html">Ver todas as notificações</a></section></div><section class="user-courses"><div class="section-heading"><div><div class="eyebrow">APRENDIZADO E NOVAS POSSIBILIDADES</div><h2>Cursos para você</h2></div><a class="text-button arrow-link" href="index.html#cursos">Ver no site ${icon('arrow-up-right')}</a></div><div class="project-grid">${renderCourses()}</div></section>`;
+    document.querySelectorAll('[data-user-course]').forEach((button) => {
+      button.onclick = () => {
+        const course = courses.find((item) => String(item.id) === button.dataset.userCourse);
+        showDialog(
+          course.nome,
+          `<p>${esc(course.descricao || '')}</p><p>Fale com a nossa equipe para saber sobre inscrições, disponibilidade e próximas turmas.</p><a class="button" href="contato.html?assunto=${encodeURIComponent(course.nome)}">Tenho interesse ${icon('arrow-up-right')}</a>`
+        );
+      };
+    });
   } else if (page === 'minhas-consultas') {
     content.innerHTML =
       heading('Minhas consultas', 'Datas, horários e informações dos seus atendimentos.') +
@@ -183,6 +202,17 @@ async function refreshData(initial = false) {
       ),
     ]);
     [appointments, requests, notifications] = values;
+    courses = page === 'area-usuario'
+      ? await all(() => supabase.from('servicos').select('id,nome,descricao,imagem_url').eq('ativo', true).order('created_at'))
+      : [];
+    for (const course of courses) {
+      if (course.imagem_url && !course.imagem_url.startsWith('https://')) {
+        const { data } = await supabase.storage
+          .from('casa-mamae-margarida')
+          .createSignedUrl(course.imagem_url, 3600);
+        course.imagem_url = data?.signedUrl || '';
+      }
+    }
     updateBadge();
     if (!['perfil', 'nova-solicitacao'].includes(page)) renderData();
   } catch (error) {
