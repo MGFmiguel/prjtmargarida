@@ -1,3 +1,15 @@
+@import url('https://db.onlinewebfonts.com/c/f0fb8c6d2e8e232d931c281a76caa7d0?family=Neo+Sans+Std+Bold');
+
+@font-face {
+  font-family: 'Neo Sans W02';
+  src: url('https://db.onlinewebfonts.com/t/9c96b92fb50910a49792b9a8c225a874.woff2') format('woff2'),
+    url('https://db.onlinewebfonts.com/t/9c96b92fb50910a49792b9a8c225a874.woff') format('woff'),
+    url('https://db.onlinewebfonts.com/t/9c96b92fb50910a49792b9a8c225a874.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --ink: #383b36;
   --muted: #75756e;
@@ -9,8 +21,18 @@
   --gold: #b39865;
   --green: #687b60;
   --white: #fff;
-  --serif: 'Neo Sans', 'Neo Sans Pro', Arial, sans-serif;
-  --sans: 'Neo Sans', 'Neo Sans Pro', Arial, sans-serif;
+  --serif: 'Neo Sans W02', 'Neo Sans', 'Neo Sans Pro', Arial, sans-serif;
+  --sans: 'Neo Sans W02', 'Neo Sans', 'Neo Sans Pro', Arial, sans-serif;
+  --title-font: 'Neo Sans Std Bold', 'Neo Sans W02', Arial, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--title-font) !important;
 }
 * {
   box-sizing: border-box;
