@@ -11,6 +11,7 @@
   display: flex;
   flex-direction: column;
   z-index: 30;
+  overflow: hidden;
 }
 .sidebar > .brand {
   margin: 0 0 35px 8px;
@@ -28,6 +29,11 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 .sidebar nav a,
 .sidebar .logout {
@@ -53,7 +59,8 @@
   height: 18px;
 }
 .sidebar .logout {
-  margin-top: auto;
+  margin-top: 8px;
+  flex-shrink: 0;
   border: 0;
   background: none;
 }
@@ -374,6 +381,24 @@ td .text-button {
   font-size: 11px;
   margin-top: 14px;
   color: var(--muted);
+}
+@media (max-height: 760px) {
+  .sidebar {
+    padding-block: 14px;
+  }
+  .sidebar > .brand {
+    margin-bottom: 14px;
+  }
+  .sidebar-label {
+    margin-bottom: 6px;
+  }
+  .sidebar nav a {
+    padding-block: 8px;
+  }
+  .sidebar .logout {
+    margin-top: 4px;
+    padding-block: 9px;
+  }
 }
 @media (max-width: 1150px) {
   .sidebar {
