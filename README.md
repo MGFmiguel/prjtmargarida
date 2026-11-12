@@ -1,5 +1,8 @@
 # Casa Mamãe Margarida
 
+Consulte [DOCUMENTACAO.md](DOCUMENTACAO.md) para uma visão geral das páginas, módulos, configuração, permissões e publicação do projeto.
+O PDF consolidado pode ser regenerado com `npm run docs:pdf`.
+
 **Nova Área da Usuária:** consulte [AREA-USUARIA.md](AREA-USUARIA.md) para ativar o cadastro, agenda, consultas, solicitações, perfil e notificações. A alteração usa a migração incremental `database/migrations/002_area_usuario.sql`; não execute novamente o SQL inicial em um banco existente.
 
 Site público e painel de gestão para uma instituição de acolhimento de mulheres. Feito com HTML5, CSS3, JavaScript modular, Vite e `@supabase/supabase-js`. O banco é PostgreSQL, com Supabase Auth, Storage privado e Row Level Security.

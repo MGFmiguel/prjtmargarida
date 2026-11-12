@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "docs:pdf": "node scripts/export-docs-pdf.mjs",
     "test:e2e": "playwright test",
     "test:supabase": "node scripts/test-supabase.mjs"
   },
