@@ -141,7 +141,7 @@
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: 9px;
-  background: var(--white);
+  background: #fffdfa;
 }
 .volunteer-card[hidden] {
   display: none;
@@ -182,8 +182,8 @@
   color: var(--muted);
 }
 .volunteer-registration {
-  background: var(--rose-dark);
-  color: white;
+  background: var(--blush);
+  color: var(--ink);
 }
 .volunteer-form-layout {
   display: grid;
@@ -193,11 +193,11 @@
 }
 .volunteer-form-intro h2 {
   margin-bottom: 16px;
-  color: white;
+  color: var(--rose);
 }
 .volunteer-form-intro p {
   margin-top: 14px;
-  color: #f4e6e8;
+  color: var(--muted);
 }
 .volunteer-registration .form-card {
   color: var(--ink);
