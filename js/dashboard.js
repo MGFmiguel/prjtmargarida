@@ -432,9 +432,10 @@ async function editRecord(record, schema = schemas[schemaPage], defaults = {}) {
   };
 }
 function deleteRecord(record) {
+  const isCourse = page === 'cursos' || page === 'servicos';
   const dialog = showDialog(
     'Excluir este registro?',
-    `<p>Esta ação remove permanentemente o registro selecionado. Beneficiárias com atendimentos vinculados não podem ser excluídas antes de resolver esses vínculos.</p><div class="form-actions"><button class="button" id="confirm-delete">Excluir registro</button><button class="text-button" id="cancel-delete">Cancelar</button></div><p class="form-status" role="status"></p>`
+    `<p>${isCourse ? 'Esta ação remove permanentemente o curso. Se houver solicitações vinculadas, ele não poderá ser excluído; nesse caso, edite o curso e desmarque “Curso disponível no site” para retirá-lo do catálogo sem apagar o histórico.' : 'Esta ação remove permanentemente o registro selecionado. Beneficiárias com atendimentos vinculados não podem ser excluídas antes de resolver esses vínculos.'}</p><div class="form-actions"><button class="button" id="confirm-delete">Excluir registro</button><button class="text-button" id="cancel-delete">Cancelar</button></div><p class="form-status" role="status"></p>`
   );
   dialog.querySelector('#cancel-delete').onclick = () => dialog.close();
   dialog.querySelector('#confirm-delete').onclick = async (event) => {
@@ -446,7 +447,9 @@ function deleteRecord(record) {
       .select('id');
     if (error || !data?.length) {
       dialog.querySelector('.form-status').textContent =
-        'Não foi possível excluir. Verifique vínculos e permissões.';
+        error?.code === '23503' && isCourse
+          ? 'Este curso tem solicitações vinculadas e não pode ser excluído. Edite-o e desmarque “Curso disponível no site” para removê-lo do catálogo, preservando as solicitações.'
+          : 'Não foi possível excluir. Verifique vínculos e permissões.';
       event.target.disabled = false;
       return;
     }
