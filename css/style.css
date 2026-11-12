@@ -1048,6 +1048,15 @@ dialog p {
     font-size: 58px;
   }
 }
+@media (min-width: 951px) {
+  #site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--cream);
+    box-shadow: 0 4px 16px #0000000d;
+  }
+}
 @media (max-width: 1150px) {
   .container {
     width: calc(100% - 64px);
