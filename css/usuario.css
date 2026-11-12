@@ -2,6 +2,8 @@
   height: 100vh;
   height: 100dvh;
   min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
   background: #f3eae5;
   overflow: hidden;
 }
@@ -28,6 +30,27 @@
   padding-block: 14px;
   background: #f3eae5;
   border-top: 1px solid #e2d5cf;
+}
+@media (max-height: 760px) {
+  .user-body .sidebar {
+    padding-block: 14px;
+  }
+  .user-body .sidebar .brand {
+    margin-bottom: 14px;
+  }
+  .user-body .sidebar-label {
+    margin-bottom: 6px;
+  }
+  .user-body .sidebar nav a {
+    padding-block: 8px;
+  }
+  .user-body .sidebar > .button.small {
+    margin-top: 8px !important;
+  }
+  .user-body .sidebar .logout {
+    margin-top: 4px;
+    padding-block: 9px;
+  }
 }
 .user-body .sidebar .brand {
   margin-bottom: 28px;
