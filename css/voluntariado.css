@@ -8,8 +8,8 @@
   gap: 44px;
 }
 .volunteer-hero h1 {
-  color: var(--rose);
-  font-size: clamp(38px, 5vw, 58px);
+  color: var(--ink);
+  font-size: clamp(42px, 5vw, 53px);
   margin-bottom: 18px;
 }
 .volunteer-lead {
@@ -193,7 +193,7 @@
 }
 .volunteer-form-intro h2 {
   margin-bottom: 16px;
-  color: var(--rose);
+  color: var(--ink);
 }
 .volunteer-form-intro p {
   margin-top: 14px;
