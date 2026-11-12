@@ -8,7 +8,6 @@ export function publicLayout() {
     const button = e.currentTarget;
     const open = button.getAttribute('aria-expanded') !== 'true';
     button.setAttribute('aria-expanded', open);
-    s;
     document.querySelector('.nav-wrap nav').classList.toggle('open', open);
   };
   document.querySelectorAll('.nav-wrap nav a').forEach((a) =>
