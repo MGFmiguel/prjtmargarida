@@ -16,6 +16,28 @@ export function publicLayout() {
       document.querySelector('.menu-toggle').setAttribute('aria-expanded', 'false');
     })
   );
+  let lastScrollY = window.scrollY;
+  window.addEventListener(
+    'scroll',
+    () => {
+      const header = document.querySelector('#site-header');
+      const menuOpen = document.querySelector('.menu-toggle').getAttribute('aria-expanded') === 'true';
+      const currentScrollY = window.scrollY;
+
+      if (window.matchMedia('(max-width: 950px)').matches && !menuOpen) {
+        if (currentScrollY < 80 || currentScrollY < lastScrollY - 6) {
+          header.classList.remove('header-hidden');
+        } else if (currentScrollY > lastScrollY + 6) {
+          header.classList.add('header-hidden');
+        }
+      } else {
+        header.classList.remove('header-hidden');
+      }
+
+      lastScrollY = currentScrollY;
+    },
+    { passive: true }
+  );
   document.querySelector('#site-footer').innerHTML =
     `<div class="container footer-main"><div>${brand}<p>Acolhendo, orientando e<br>transformando vidas, juntas.</p></div><div><h3>A casa</h3><a href="index.html#sobre">Sobre nós</a><a href="index.html#cursos">Nossos cursos</a><a href="index.html#projetos">Projetos</a><a href="voluntariado.html">Voluntariado</a></div><div><h3>Vamos juntas</h3><a href="solicitar-atendimento.html">Solicitar atendimento</a><a href="doacoes.html">Quero ajudar</a><a href="contato.html">Fale com a gente</a></div><div class="footer-note">${icon('heart-handshake')}<p>Cada mulher merece ser ouvida,<br>respeitada e acolhida.</p><a href="area-usuario.html">Área da usuária ${icon('arrow-up-right')}</a><a href="login.html">Área da equipe ${icon('arrow-up-right')}</a></div></div><div class="container footer-bottom"><span>© ${new Date().getFullYear()} Casa Mamãe Margarida. Todos os direitos reservados.</span><button class="text-button" id="privacy">Privacidade e cuidado com seus dados</button></div>`;
   document.querySelector('#privacy').onclick = async () => {
