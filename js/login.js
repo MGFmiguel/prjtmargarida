@@ -2,11 +2,15 @@ import { brand } from './layout.js';
 import { requireConnection } from './supabase.js';
 import { supabaseErrorMessage } from './supabase-errors.js';
 import { refreshIcons, icon } from './utils.js';
-import { destinationForRole, passwordRedirect } from './auth-routing.js';
+import { courseRegistrationPath, destinationForRole, passwordRedirect } from './auth-routing.js';
 document.querySelector('#auth-brand').innerHTML = brand;
 refreshIcons();
 const form = document.querySelector('#auth-form');
 const status = document.querySelector('#auth-status');
+const requestedPath = courseRegistrationPath(new URLSearchParams(location.search).get('redirect'));
+const signupLink = document.querySelector('#signup-link');
+if (requestedPath && signupLink)
+  signupLink.href = `cadastro.html?redirect=${encodeURIComponent(requestedPath)}`;
 document.querySelector('#toggle-password').onclick = () => {
   const input = form.elements.password;
   const visible = input.type === 'password';
@@ -65,7 +69,7 @@ form.onsubmit = async (e) => {
         if (profileError) throw new Error(supabaseErrorMessage(profileError));
         throw new Error('Seu acesso à equipe ainda não foi autorizado. Fale com a administração.');
       }
-      location.assign(destinationForRole(profile.role));
+      location.assign(destinationForRole(profile.role, requestedPath));
     }
   } catch (error) {
     status.textContent = error.message;

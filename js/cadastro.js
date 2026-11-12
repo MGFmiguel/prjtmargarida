@@ -1,9 +1,12 @@
 import { publicLayout } from './layout.js';
 import { requireConnection } from './supabase.js';
 import { validCPF } from './utils.js';
-import { signupRedirect } from './auth-routing.js';
+import { courseRegistrationPath, signupRedirect } from './auth-routing.js';
 publicLayout();
 const form = document.querySelector('#signup-form');
+const requestedPath = courseRegistrationPath(new URLSearchParams(location.search).get('redirect'));
+const emailRedirect = new URL(signupRedirect);
+if (requestedPath) emailRedirect.searchParams.set('redirect', requestedPath);
 form.elements.data_nascimento.max = new Date().toLocaleDateString('en-CA');
 form.elements.cpf.addEventListener('input', () => form.elements.cpf.setCustomValidity(''));
 for (const name of ['password', 'confirm_password'])
@@ -52,7 +55,7 @@ form.addEventListener('submit', async (event) => {
       email: form.elements.email.value.trim(),
       password: form.elements.password.value,
       options: {
-        emailRedirectTo: signupRedirect,
+        emailRedirectTo: emailRedirect.href,
         data: {
           cadastro_cmm: true,
           consentimento: form.elements.consentimento.checked,
@@ -74,7 +77,7 @@ form.addEventListener('submit', async (event) => {
     }
     form.reset();
     if (data.session) {
-      location.assign('area-usuario.html');
+      location.assign(requestedPath || 'area-usuario.html');
       return;
     }
     message.className = 'form-status success';

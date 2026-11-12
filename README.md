@@ -80,6 +80,7 @@ No Windows, `npm.cmd` evita o bloqueio do `npm.ps1` pela política de execução
 3. Aguarde o provisionamento.
 4. Em Authentication, mantenha login por e-mail habilitado e ajuste a política de senha para aceitar no mínimo 6 caracteres. Para a nova Área da Usuária, aplique a migração 002 e habilite cadastro público com confirmação de e-mail; novas contas recebem somente o perfil `usuario`. A autorização de equipe continua sendo administrativa. As telas do site limitam novas senhas a 12 caracteres.
 5. Em Authentication → URL Configuration, configure a Site URL local e adicione `http://localhost:5173/recuperar-senha.html` às URLs permitidas. Se usar outro host ou porta, inclua a URL correspondente.
+   Para retomar uma inscrição em curso após confirmar o cadastro, permita também `https://prjtmargarida.vercel.app/area-usuario.html**`.
 
 **Teste:** confirme que você consegue abrir SQL Editor, Authentication e Storage no projeto. Consulte a documentação de [URLs de redirecionamento](https://supabase.com/docs/guides/auth/redirect-urls) para ajustar os ambientes local e publicado.
 
@@ -177,6 +178,8 @@ Uma beneficiária pode ter vários atendimentos. O histórico da beneficiária m
 ## 11. Cursos
 
 Administradores cadastram, editam, ativam/desativam e excluem cursos em `cursos.html`. Também informam início, fim e status da turma. Em bancos existentes, execute `database/migrations/003_cursos_datas_status.sql` no SQL Editor do Supabase antes de usar esses campos. Para compatibilidade com os dados existentes, os cursos continuam armazenados na tabela `servicos` e as imagens usam a pasta `servicos/`.
+
+Para solicitar inscrição, a pessoa precisa estar autenticada. O botão do curso abre o formulário da área da usuária com o curso escolhido; os pedidos entram em `solicitacoes` para análise da equipe. O pedido não confirma automaticamente uma vaga.
 
 **Teste:** cadastre um curso e confira o site. Desative-o e recarregue: ele deve desaparecer do catálogo público, mas continuar visível para a equipe.
 

@@ -2,7 +2,7 @@ import { supabase, configured } from './supabase.js';
 import { brand } from './layout.js';
 import { icon, refreshIcons, escapeHTML as esc, dateBR, notify, showDialog } from './utils.js';
 import { supabaseErrorMessage } from './supabase-errors.js';
-import { destinationForRole } from './auth-routing.js';
+import { courseRegistrationPath, destinationForRole } from './auth-routing.js';
 import { upcomingAppointments, agendaGroups } from './usuario-data.js';
 
 const page = document.body.dataset.page;
@@ -38,8 +38,8 @@ async function all(query) {
     if (data.length < 500) return rows;
   }
 }
-function heading(title, description) {
-  return `<div class="user-heading"><div><div class="eyebrow">SEU ESPAÇO DE ACOLHIMENTO</div><h1>${esc(title)}</h1><p>${esc(description)}</p></div><a class="button" href="nova-solicitacao.html">Solicitar atendimento ${icon('plus')}</a></div>`;
+function heading(title, description, actionLabel = 'Solicitar atendimento', actionHref = 'nova-solicitacao.html') {
+  return `<div class="user-heading"><div><div class="eyebrow">SEU ESPAÇO DE ACOLHIMENTO</div><h1>${esc(title)}</h1><p>${esc(description)}</p></div><a class="button" href="${actionHref}">${esc(actionLabel)} ${icon('plus')}</a></div>`;
 }
 function shell() {
   document.querySelector('#sidebar').innerHTML =
@@ -119,7 +119,7 @@ function renderData() {
         const course = courses.find((item) => String(item.id) === button.dataset.userCourse);
         showDialog(
           course.nome,
-          `<p>${esc(course.descricao || '')}</p><p>Período: ${esc(coursePeriod(course))}. Status: ${esc(course.status || 'Inscrições abertas')}.</p><p>Fale com a nossa equipe para saber sobre disponibilidade e próximas turmas.</p><a class="button" href="contato.html?assunto=${encodeURIComponent(course.nome)}">Tenho interesse ${icon('arrow-up-right')}</a>`
+          `<p>${esc(course.descricao || '')}</p><p>Período: ${esc(coursePeriod(course))}. Status: ${esc(course.status || 'Inscrições abertas')}.</p>${course.status === 'Inscrições abertas' ? `<a class="button" href="nova-solicitacao.html?servico_id=${encodeURIComponent(course.id)}">Inscrever-se no curso ${icon('arrow-up-right')}</a>` : '<p>As inscrições para este curso não estão abertas no momento.</p>'}`
         );
       };
     });
@@ -247,14 +247,34 @@ async function refreshData(initial = false) {
 }
 async function renderRequest() {
   const services = await all(() =>
-    supabase.from('servicos').select('id,nome,descricao').eq('ativo', true).order('nome').order('id')
+    supabase.from('servicos').select('id,nome,descricao,status').eq('ativo', true).order('nome').order('id')
   );
+  const requestedCourseId = new URLSearchParams(location.search).get('servico_id');
+  const courseOptions = services.filter(
+    (service) =>
+      /curso|oficina|capacita|educa|aprendiz/i.test(`${service.nome} ${service.descricao || ''}`) &&
+      service.status === 'Inscrições abertas'
+  );
+  const course = courseOptions.find((service) => String(service.id) === requestedCourseId);
+  const isCourseEnrollment = Boolean(requestedCourseId);
+  if (isCourseEnrollment && !course) {
+    content.innerHTML =
+      heading('Inscrição em curso', 'Este curso não está disponível para inscrição no momento.') +
+      '<div class="panel"><p>Confira os cursos com inscrições abertas na página inicial.</p><a class="button" href="index.html#cursos">Ver cursos</a></div>';
+    refreshIcons();
+    return;
+  }
+  const choices = isCourseEnrollment ? courseOptions : services;
   content.innerHTML =
     heading(
-      'Solicitar atendimento',
-      'Conte como podemos ajudar. A preferência de horário não confirma um agendamento.'
+      isCourseEnrollment ? 'Solicitar inscrição no curso' : 'Solicitar atendimento',
+      isCourseEnrollment
+        ? 'Envie seu pedido de inscrição. A equipe da Casa confirmará sua participação.'
+        : 'Conte como podemos ajudar. A preferência de horário não confirma um agendamento.',
+      isCourseEnrollment ? 'Ver cursos' : 'Solicitar atendimento',
+      isCourseEnrollment ? 'index.html#cursos' : 'nova-solicitacao.html'
     ) +
-    `<form class="form-card user-form" id="request-form"><div class="form-grid"><label class="field full">Serviço desejado *<select name="servico_id" required><option value="">Selecione um serviço</option>${services.map((s) => `<option value="${esc(s.id)}">${esc(s.nome)}</option>`).join('')}</select></label><label class="field full">Motivo *<textarea name="motivo" required minlength="3" maxlength="4000"></textarea></label><label class="field">Data de preferência *<input name="data_preferencia" type="date" required min="${new Date().toLocaleDateString('en-CA')}"></label><label class="field">Horário de preferência *<input name="horario_preferencia" type="time" required></label><label class="field full">Observações<textarea name="observacoes" maxlength="4000"></textarea></label></div><div class="form-actions"><button class="button" type="submit" ${services.length ? '' : 'disabled'}>Enviar solicitação ${icon('arrow-right')}</button></div><p class="form-status" role="status">${services.length ? '' : 'Os serviços serão disponibilizados pela equipe. Tente novamente mais tarde.'}</p></form>`;
+    `<form class="form-card user-form" id="request-form"><div class="form-grid"><label class="field full">${isCourseEnrollment ? 'Curso desejado' : 'Serviço desejado'} *<select name="servico_id" required><option value="">Selecione ${isCourseEnrollment ? 'um curso' : 'um serviço'}</option>${choices.map((s) => `<option value="${esc(s.id)}" ${String(s.id) === requestedCourseId ? 'selected' : ''}>${esc(s.nome)}</option>`).join('')}</select></label><label class="field full">${isCourseEnrollment ? 'Por que deseja participar?' : 'Motivo'} *<textarea name="motivo" required minlength="3" maxlength="4000"></textarea></label><label class="field">${isCourseEnrollment ? 'Data de preferência para participar' : 'Data de preferência'} *<input name="data_preferencia" type="date" required min="${new Date().toLocaleDateString('en-CA')}"></label><label class="field">${isCourseEnrollment ? 'Horário de preferência' : 'Horário de preferência'} *<input name="horario_preferencia" type="time" required></label><label class="field full">Observações<textarea name="observacoes" maxlength="4000"></textarea></label></div><div class="form-actions"><button class="button" type="submit" ${choices.length ? '' : 'disabled'}>${isCourseEnrollment ? 'Enviar pedido de inscrição' : 'Enviar solicitação'} ${icon('arrow-right')}</button></div><p class="form-status" role="status">${choices.length ? '' : 'As opções serão disponibilizadas pela equipe. Tente novamente mais tarde.'}</p></form>`;
   document.querySelector('#request-form').onsubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget,
@@ -360,7 +380,15 @@ async function init() {
   try {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
-      location.replace('login.html');
+      const requestedPath =
+        page === 'nova-solicitacao'
+          ? courseRegistrationPath(
+              `nova-solicitacao.html?servico_id=${new URLSearchParams(location.search).get('servico_id') || ''}`
+            )
+          : null;
+      location.replace(
+        requestedPath ? `login.html?redirect=${encodeURIComponent(requestedPath)}` : 'login.html'
+      );
       return;
     }
     user = data.user;
@@ -369,6 +397,11 @@ async function init() {
     profile = result.data;
     if (profile?.role !== 'usuario') {
       location.replace(destinationForRole(profile?.role) || 'login.html');
+      return;
+    }
+    const requestedPath = courseRegistrationPath(new URLSearchParams(location.search).get('redirect'));
+    if (page === 'area-usuario' && requestedPath) {
+      location.replace(requestedPath);
       return;
     }
     shell();

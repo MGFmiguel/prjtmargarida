@@ -22,10 +22,28 @@ function renderCourses() {
     (button) =>
       (button.onclick = () => {
         const course = courses.find((item) => String(item.id) === button.dataset.course);
+        const canEnroll =
+          configured && (course.status || 'Inscrições abertas') === 'Inscrições abertas';
         showDialog(
           course.nome,
-          `<p>${esc(course.descricao)}</p><p>Período: ${esc(coursePeriod(course))}. Status: ${esc(course.status || 'Inscrições abertas')}.</p><p>Fale com a nossa equipe para saber sobre disponibilidade e próximas turmas.</p><a class="button" href="contato.html?assunto=${encodeURIComponent(course.nome)}">Tenho interesse ${icon('arrow-up-right')}</a>`
+          `<p>${esc(course.descricao)}</p><p>Período: ${esc(coursePeriod(course))}. Status: ${esc(course.status || 'Inscrições abertas')}.</p>${canEnroll ? `<button class="button" type="button" data-enroll-course>Inscrever-se no curso ${icon('arrow-up-right')}</button><p class="form-status" data-enroll-status role="status"></p>` : `<p>Fale com a nossa equipe para saber sobre disponibilidade e próximas turmas.</p><a class="button" href="contato.html?assunto=${encodeURIComponent(course.nome)}">Tenho interesse ${icon('arrow-up-right')}</a>`}`
         );
+        document.querySelector('[data-enroll-course]')?.addEventListener('click', async (event) => {
+          const enrollButton = event.currentTarget;
+          const next = `nova-solicitacao.html?servico_id=${encodeURIComponent(course.id)}`;
+          const status = document.querySelector('[data-enroll-status]');
+          enrollButton.disabled = true;
+          try {
+            const { data, error } = await supabase.auth.getSession();
+            if (error) throw error;
+            location.assign(
+              data.session?.user ? next : `login.html?redirect=${encodeURIComponent(next)}`
+            );
+          } catch {
+            status.textContent = 'Não foi possível verificar sua conta. Tente novamente.';
+            enrollButton.disabled = false;
+          }
+        });
       })
   );
   refreshIcons();

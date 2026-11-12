@@ -91,6 +91,8 @@ O Vite declara as páginas de entrada em `vite.config.js`. Ao adicionar uma pág
 5. Execute os arquivos `database/verificar.sql` e `database/verificar-area-usuario.sql` no SQL Editor para inspecionar a configuração.
 6. Configure URL do site e URLs de retorno de autenticação no painel do Supabase, incluindo o endereço de recuperação de senha.
 
+Para inscrições em cursos, mantenha `https://prjtmargarida.vercel.app/area-usuario.html**` na lista de redirecionamentos permitidos: o cadastro acrescenta uma rota de retorno para retomar o curso depois da confirmação do e-mail.
+
 Somente a URL e a chave **publicável** podem estar nas variáveis `VITE_` do frontend. Nunca coloque `service_role`, Secret Key, senha do banco ou outro segredo no navegador ou no repositório. O isolamento dos dados depende das políticas RLS configuradas no banco.
 
 As telas de cadastro e redefinição aceitam senhas de 6 a 12 caracteres. No Supabase, configure o requisito mínimo de senha para aceitar 6 caracteres; as opções de segurança ficam em Authentication. O limite máximo de 12 é validado pelas telas deste site e não substitui a política do provedor para chamadas diretas à API. Consulte [segurança de senhas do Supabase](https://supabase.com/docs/guides/auth/password-security).
@@ -111,6 +113,8 @@ As regras detalhadas por tabela estão no SQL e nos guias de integração. Não 
 ## Cursos, projetos e formulários
 
 O painel compartilha a lógica de CRUD entre as páginas e define suas configurações em `js/admin-schema.js`. Cursos usam a tabela `servicos` por compatibilidade com o esquema existente; o conteúdo exibido ao público é chamado de curso. A migração `003_cursos_datas_status.sql` adiciona datas de início e fim e status. A página principal e a área da usuária leem os cursos publicados/ativos conforme os filtros implementados no catálogo.
+
+Para pedir inscrição, a pessoa precisa entrar ou criar uma conta. O botão do curso leva ao formulário autenticado com o curso selecionado; o pedido usa a tabela `solicitacoes`, aparece em `minhas-solicitacoes.html` e pode ser analisado pela equipe em `solicitacoes.html`. O envio do pedido não confirma a vaga: a equipe deve confirmar a participação.
 
 As imagens de cursos e projetos podem usar o Storage do Supabase conforme a configuração do painel. Projetos têm status e datas; cursos têm status, datas e indicador de publicação. Solicitações e mensagens ficam no banco e podem estar vinculadas a outros registros: antes de apagar dados, verifique as chaves estrangeiras e o histórico relacionado.
 
