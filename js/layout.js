@@ -36,6 +36,7 @@ export function publicLayout() {
         }
       } else {
         header.classList.remove('header-hidden', 'menu-button-only');
+        header.classList.toggle('header-compact', currentScrollY > 40);
       }
 
       lastScrollY = currentScrollY;
