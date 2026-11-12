@@ -24,14 +24,18 @@ export function publicLayout() {
       const menuOpen = document.querySelector('.menu-toggle').getAttribute('aria-expanded') === 'true';
       const currentScrollY = window.scrollY;
 
-      if (window.matchMedia('(max-width: 950px)').matches && !menuOpen) {
-        if (currentScrollY < 80 || currentScrollY < lastScrollY - 6) {
+      if (window.matchMedia('(max-width: 950px)').matches) {
+        if (currentScrollY < 80) {
+          header.classList.remove('header-hidden', 'menu-button-only');
+        } else if (menuOpen || currentScrollY < lastScrollY - 6) {
           header.classList.remove('header-hidden');
+          header.classList.add('menu-button-only');
         } else if (currentScrollY > lastScrollY + 6) {
+          header.classList.remove('menu-button-only');
           header.classList.add('header-hidden');
         }
       } else {
-        header.classList.remove('header-hidden');
+        header.classList.remove('header-hidden', 'menu-button-only');
       }
 
       lastScrollY = currentScrollY;

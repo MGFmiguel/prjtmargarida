@@ -1103,6 +1103,33 @@ dialog p {
   #site-header.header-hidden {
     transform: translateY(-100%);
   }
+  #site-header.menu-button-only {
+    position: sticky;
+    top: 0;
+    background: transparent;
+    transition: none;
+  }
+  #site-header.menu-button-only .topbar {
+    visibility: hidden;
+  }
+  #site-header.menu-button-only .brand {
+    display: none;
+  }
+  #site-header.menu-button-only .menu-toggle {
+    position: fixed;
+    top: 14px;
+    right: 20px;
+    z-index: 101;
+    background: var(--cream);
+    box-shadow: 0 4px 16px #0002;
+  }
+  #site-header.menu-button-only .nav-wrap nav {
+    position: fixed;
+    top: 64px;
+    right: 16px;
+    left: auto;
+    width: min(280px, calc(100vw - 32px));
+  }
   .nav-wrap {
     height: 86px;
   }
