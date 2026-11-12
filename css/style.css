@@ -628,6 +628,21 @@ p {
   font-size: 12px;
   line-height: 1.8;
 }
+.project-copy .card-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+.project-copy .card-description.expanded {
+  display: block;
+  overflow: visible;
+}
+.read-more {
+  margin-top: 8px;
+  color: var(--rose);
+  font-size: 11px;
+}
 .project-bottom {
   border-top: 1px solid var(--line);
   margin-top: 20px;

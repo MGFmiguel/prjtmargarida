@@ -78,7 +78,7 @@ function renderCourses() {
   const list = courses
     .map(
       (course) =>
-        `<article class="project-card"><div class="project-image">${course.imagem_url ? `<img src="${esc(course.imagem_url)}" alt="" loading="lazy">` : icon('book-open')}<span>CURSOS E OFICINAS</span></div><div class="project-copy"><h3>${esc(course.nome)}</h3><p>${esc(course.descricao || '')}</p><div class="project-bottom"><span>${icon('calendar-days')} ${coursePeriod(course)}</span><span class="course-status">${esc(course.status || 'Inscrições abertas')}</span><button class="icon-button" data-user-course="${esc(course.id)}" aria-label="Detalhes de ${esc(course.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
+        `<article class="project-card"><div class="project-image">${course.imagem_url ? `<img src="${esc(course.imagem_url)}" alt="" loading="lazy">` : icon('book-open')}<span>CURSOS E OFICINAS</span></div><div class="project-copy"><h3>${esc(course.nome)}</h3><p class="card-description">${esc(course.descricao || '')}</p><button class="text-button read-more" type="button" data-read-more>Ler mais</button><div class="project-bottom"><span>${icon('calendar-days')} ${coursePeriod(course)}</span><span class="course-status">${esc(course.status || 'Inscrições abertas')}</span><button class="icon-button" data-user-course="${esc(course.id)}" aria-label="Detalhes de ${esc(course.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
     )
     .join('');
   return list || empty('Novos cursos serão divulgados em breve.');
@@ -107,6 +107,13 @@ function renderData() {
         .map((a) => appointmentCard(a, true))
         .join('') || empty('Quando um atendimento for agendado, ele aparecerá aqui.')
     }</div><a class="button" style="margin-top:20px" href="nova-solicitacao.html">Solicitar atendimento ${icon('arrow-up-right')}</a></section><section class="panel"><h2>Novidades para você</h2>${notifications.slice(0, 3).map(notificationCard).join('') || empty('Nenhuma novidade por enquanto.')}<a class="text-button" href="notificacoes.html">Ver todas as notificações</a></section></div><section class="user-courses"><div class="section-heading"><div><div class="eyebrow">APRENDIZADO E NOVAS POSSIBILIDADES</div><h2>Cursos para você</h2></div><a class="text-button arrow-link" href="index.html#cursos">Ver no site ${icon('arrow-up-right')}</a></div><div class="project-grid">${renderCourses()}</div></section>`;
+    content.querySelectorAll('[data-read-more]').forEach((button) => {
+      button.onclick = () => {
+        const description = button.previousElementSibling;
+        const expanded = description.classList.toggle('expanded');
+        button.textContent = expanded ? 'Ler menos' : 'Ler mais';
+      };
+    });
     document.querySelectorAll('[data-user-course]').forEach((button) => {
       button.onclick = () => {
         const course = courses.find((item) => String(item.id) === button.dataset.userCourse);

@@ -14,9 +14,10 @@ function renderCourses() {
     courses
       .map(
         (course) =>
-          `<article class="project-card"><div class="project-image">${course.imagem_url ? `<img src="${esc(safeImage(course.imagem_url))}" alt="" loading="lazy">` : icon(course.icon || 'book-open')}<span>CURSOS E OFICINAS</span></div><div class="project-copy"><h3>${esc(course.nome)}</h3><p>${esc(course.descricao)}</p><div class="project-bottom"><span>${icon('calendar-days')} ${coursePeriod(course)}</span><span class="course-status">${esc(course.status || 'Inscrições abertas')}</span><button class="icon-button" data-course="${esc(course.id)}" aria-label="Detalhes de ${esc(course.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
+          `<article class="project-card"><div class="project-image">${course.imagem_url ? `<img src="${esc(safeImage(course.imagem_url))}" alt="" loading="lazy">` : icon(course.icon || 'book-open')}<span>CURSOS E OFICINAS</span></div><div class="project-copy"><h3>${esc(course.nome)}</h3><p class="card-description">${esc(course.descricao)}</p><button class="text-button read-more" type="button" data-read-more>Ler mais</button><div class="project-bottom"><span>${icon('calendar-days')} ${coursePeriod(course)}</span><span class="course-status">${esc(course.status || 'Inscrições abertas')}</span><button class="icon-button" data-course="${esc(course.id)}" aria-label="Detalhes de ${esc(course.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
       )
       .join('') || '<p class="empty-state">Novos cursos serão divulgados em breve.</p>';
+  bindReadMore(document.querySelector('#courses-list'));
   document.querySelectorAll('[data-course]').forEach(
     (button) =>
       (button.onclick = () => {
@@ -42,9 +43,10 @@ function renderProjects() {
     projectData
       .map(
         (p) =>
-          `<article class="project-card"><div class="project-image">${p.imagem_url ? `<img src="${esc(safeImage(p.imagem_url))}" alt="" loading="lazy">` : icon('sprout')}<span>${esc(p.label || 'PROJETO DA CASA')}</span></div><div class="project-copy"><h3>${esc(p.nome)}</h3><p>${esc(p.descricao)}</p><div class="project-bottom"><span>${icon('calendar-days')} ${p.data_inicio ? dateBR(p.data_inicio) + (p.data_fim ? ' a ' + dateBR(p.data_fim) : '') : 'Consulte a programação'}</span><button class="icon-button" data-project="${esc(p.id)}" aria-label="Detalhes de ${esc(p.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
+          `<article class="project-card"><div class="project-image">${p.imagem_url ? `<img src="${esc(safeImage(p.imagem_url))}" alt="" loading="lazy">` : icon('sprout')}<span>${esc(p.label || 'PROJETO DA CASA')}</span></div><div class="project-copy"><h3>${esc(p.nome)}</h3><p class="card-description">${esc(p.descricao)}</p><button class="text-button read-more" type="button" data-read-more>Ler mais</button><div class="project-bottom"><span>${icon('calendar-days')} ${p.data_inicio ? dateBR(p.data_inicio) + (p.data_fim ? ' a ' + dateBR(p.data_fim) : '') : 'Consulte a programação'}</span><button class="icon-button" data-project="${esc(p.id)}" aria-label="Detalhes de ${esc(p.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
       )
       .join('') || '<p class="empty-state">Novos projetos serão divulgados em breve.</p>';
+  bindReadMore(document.querySelector('#projects-list'));
   document.querySelectorAll('[data-project]').forEach(
     (button) =>
       (button.onclick = () => {
@@ -56,6 +58,15 @@ function renderProjects() {
       })
   );
   refreshIcons();
+}
+function bindReadMore(container) {
+  container.querySelectorAll('[data-read-more]').forEach((button) => {
+    button.onclick = () => {
+      const description = button.previousElementSibling;
+      const expanded = description.classList.toggle('expanded');
+      button.textContent = expanded ? 'Ler menos' : 'Ler mais';
+    };
+  });
 }
 function safeImage(url) {
   try {
