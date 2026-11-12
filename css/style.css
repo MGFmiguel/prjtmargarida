@@ -134,7 +134,7 @@ p {
   align-items: center;
   justify-content: space-between;
   padding: 0 max(50px, calc((100vw - 1240px) / 2));
-  font-size: 11px;
+  font-size: 12px;
   background: #f1e5df;
   color: #775850;
   letter-spacing: 0.2px;
@@ -229,7 +229,7 @@ p {
   border: 1px solid var(--rose);
   border-radius: 5px;
   padding: 14px 21px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 550;
   line-height: 1.6;
   transition:
@@ -246,7 +246,7 @@ p {
 }
 .button.small {
   padding: 11px 15px;
-  font-size: 11px;
+  font-size: 12px;
   gap: 12px;
 }
 .button-outline {
@@ -263,7 +263,7 @@ p {
 }
 .eyebrow {
   color: var(--rose);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 650;
   letter-spacing: 1.8px;
   display: flex;
@@ -313,7 +313,7 @@ p {
   gap: 12px;
   align-items: center;
   margin-top: 32px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink);
 }
 .reassurance-icon {
@@ -327,7 +327,7 @@ p {
 }
 .hero-reassurance small {
   display: block;
-  font-size: 10px;
+  font-size: 11px;
   color: #8c8b82;
   margin-top: 1px;
 }
@@ -408,13 +408,13 @@ p {
   display: block;
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 12px;
   margin-top: 2px;
 }
 .photo-caption {
   display: block;
   text-align: right;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 2px;
   margin-top: 15px;
   color: var(--ink);
@@ -434,7 +434,7 @@ p {
   align-items: center;
   justify-content: center;
   gap: 13px;
-  font-size: 12px;
+  font-size: 13px;
   border-right: 1px solid #dbdcd0;
   color: var(--ink);
 }
@@ -464,7 +464,7 @@ p {
   margin-bottom: 12px;
 }
 .section-heading p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.9;
   padding-bottom: 3px;
 }
@@ -479,7 +479,7 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 13px;
-  font-size: 11 px;
+  font-size: 12px;
   font-weight: 600;
 }
 .arrow-link svg {
@@ -496,7 +496,7 @@ p {
   margin-top: 25px;
 }
 .section-bottom > span {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink);
 }
 .about-section {
@@ -523,7 +523,7 @@ p {
   text-align: center;
 }
 .about-art > .eyebrow {
-  font-size: 8px;
+  font-size: 10px;
   margin-bottom: 15px;
   color: #787c66;
 }
@@ -551,7 +551,7 @@ p {
   margin-bottom: 20px;
 }
 .about-copy > p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.9;
   margin-top: 12px;
 }
@@ -566,7 +566,7 @@ p {
   border-bottom: 2px solid transparent;
   background: none;
   padding: 8px 0 12px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
 }
 .about-tabs button[aria-selected='true'] {
@@ -575,7 +575,7 @@ p {
 }
 .about-copy #about-panel {
   min-height: 46px;
-  font-size: 11px;
+  font-size: 12px;
 }
 .project-grid {
   display: grid;
@@ -611,7 +611,7 @@ p {
   background: #fffdf4ee;
   color: #5f6657;
   padding: 5px 9px;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 650;
   letter-spacing: 1px;
 }
@@ -625,7 +625,7 @@ p {
   margin-bottom: 9px;
 }
 .project-copy p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.8;
 }
 .project-copy .card-description {
@@ -641,7 +641,7 @@ p {
 .read-more {
   margin-top: 8px;
   color: var(--rose);
-  font-size: 11px;
+  font-size: 12px;
 }
 .project-bottom {
   border-top: 1px solid var(--line);
@@ -655,7 +655,7 @@ p {
   display: flex;
   gap: 6px;
   align-items: center;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
 }
 .project-bottom > span svg {
@@ -684,7 +684,7 @@ p {
   background: var(--blush);
 }
 .catalog-note {
-  font-size: 10px;
+  font-size: 11px;
   text-align: center;
   margin-top: 22px;
   color: #79786f;
@@ -714,14 +714,14 @@ p {
   stroke-width: 1.2;
 }
 .help-inner .eyebrow {
-  font-size: 8px;
+  font-size: 10px;
   margin-bottom: 10px;
 }
 .help-inner h2 {
   font-size: 27px;
 }
 .help-inner p {
-  font-size: 11px;
+  font-size: 12px;
   margin-top: 9px;
 }
 .help-inner > .button {
@@ -739,7 +739,7 @@ p {
   font-size: 25px;
 }
 .contact-band p {
-  font-size: 12px;
+  font-size: 13px;
   margin-top: 8px;
 }
 footer {
@@ -753,17 +753,17 @@ footer {
   padding-block: 47px;
 }
 .footer-main p {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.9;
   margin-top: 14px;
 }
 .footer-main h3 {
-  font-size: 11px;
+  font-size: 12px;
   margin: 6px 0 15px;
 }
 .footer-main > div > a:not(.brand) {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   color: #77766d;
   margin-bottom: 10px;
 }
@@ -788,11 +788,11 @@ footer {
   gap: 20px;
   border-top: 1px solid #ddd9cf;
   padding-block: 19px;
-  font-size: 9px;
+  font-size: 10px;
   color: #828078;
 }
 .footer-bottom button {
-  font-size: 9px;
+  font-size: 10px;
   color: #737568;
 }
 .skip-link {
@@ -894,7 +894,7 @@ dialog p {
   margin-bottom: 15px;
 }
 .info-card p {
-  font-size: 12px;
+  font-size: 13px;
   margin: 12px 0;
 }
 .info-card a {
@@ -912,7 +912,7 @@ dialog p {
   margin-bottom: 8px;
 }
 .form-intro {
-  font-size: 12px;
+  font-size: 13px;
   margin-bottom: 24px;
 }
 .form-grid {
@@ -924,7 +924,7 @@ dialog p {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
 }
 .field.full,
@@ -959,7 +959,7 @@ dialog p {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
   font-weight: 400;
 }
@@ -1003,7 +1003,7 @@ dialog p {
   font-size: 14px;
 }
 .donation-option p {
-  font-size: 11px;
+  font-size: 12px;
   margin-top: 7px;
 }
 .empty-state {
@@ -1056,10 +1056,10 @@ dialog p {
   }
   .nav-wrap nav {
     gap: 16px;
-    font-size: 12px;
+    font-size: 13px;
   }
   .nav-wrap .button.small {
-    font-size: 10px;
+    font-size: 11px;
     padding: 10px;
   }
   .brand strong {
@@ -1076,7 +1076,7 @@ dialog p {
   }
   .hero-actions .button {
     padding: 12px 14px;
-    font-size: 11px;
+    font-size: 12px;
   }
   .hero-visual {
     height: 415px;
@@ -1149,16 +1149,16 @@ dialog p {
     margin-top: 22px;
   }
   .floating-note {
-    font-size: 12px;
+    font-size: 13px;
     padding: 12px;
     left: -5px;
     bottom: 55px;
   }
   .floating-note small {
-    font-size: 9px;
+    font-size: 10px;
   }
   .values-strip span {
-    font-size: 10px;
+    font-size: 11px;
     gap: 8px;
   }
   .values-strip svg {
@@ -1204,7 +1204,7 @@ dialog p {
     justify-content: center;
     height: 30px;
     padding-inline: 20px;
-    font-size: 10px;
+    font-size: 11px;
   }
   .topbar > a {
     display: none;
@@ -1228,7 +1228,7 @@ dialog p {
     letter-spacing: -1.6px;
   }
   .hero .eyebrow {
-    font-size: 8px;
+    font-size: 10px;
     letter-spacing: 1.4px;
   }
   .hero-copy > p {
@@ -1243,7 +1243,7 @@ dialog p {
   }
   .hero-actions .button {
     padding: 12px 13px;
-    font-size: 10px;
+    font-size: 11px;
     gap: 8px;
   }
   .hero-actions .button svg {
@@ -1272,7 +1272,7 @@ dialog p {
     font-size: 14px;
   }
   .floating-note small {
-    font-size: 9px;
+    font-size: 10px;
   }
   .spark-one {
     font-size: 58px;
@@ -1284,7 +1284,7 @@ dialog p {
   }
   .values-strip span {
     justify-content: flex-start !important;
-    font-size: 9px;
+    font-size: 10px;
     border: 0;
     gap: 8px;
   }
@@ -1302,7 +1302,7 @@ dialog p {
     margin-top: 15px;
   }
   .eyebrow {
-    font-size: 8px;
+    font-size: 10px;
     letter-spacing: 1.5px;
   }
   .section-bottom {
@@ -1310,10 +1310,10 @@ dialog p {
   }
   .section-bottom > span {
     max-width: 130px;
-    font-size: 10px;
+    font-size: 11px;
   }
   .section-bottom .arrow-link {
-    font-size: 10px;
+    font-size: 11px;
     gap: 7px;
   }
   .about-grid {
@@ -1355,7 +1355,7 @@ dialog p {
     display: block;
   }
   .help-inner p {
-    font-size: 12px;
+    font-size: 13px;
   }
   .help-inner > .button {
     margin-top: 23px;

@@ -32,7 +32,7 @@
   max-width: 370px;
 }
 .auth-story > p {
-  font-size: 11px;
+  font-size: 12px;
 }
 .auth-flower {
   color: #a87b72;
@@ -83,7 +83,7 @@
   margin: 20px 0 25px;
 }
 .auth-options .text-button {
-  font-size: 11px;
+  font-size: 12px;
 }
 .auth-box .button {
   width: 100%;
@@ -93,7 +93,7 @@
   align-items: center;
   gap: 10px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   margin-top: 35px;
 }
 .auth-box .security-note {
@@ -102,13 +102,13 @@
   align-items: center;
   justify-content: center;
   margin-top: 20px;
-  font-size: 10px;
+  font-size: 11px;
 }
 .security-note svg {
   width: 14px;
 }
 .auth-status {
-  font-size: 12px;
+  font-size: 13px;
   margin-top: 20px;
   color: var(--rose);
 }
