@@ -225,6 +225,14 @@
   .volunteer-hero {
     padding-top: 28px;
   }
+  .volunteer-hero .hero-actions {
+    flex-wrap: wrap;
+  }
+  .volunteer-hero .hero-actions .button {
+    flex: 1 1 180px;
+    justify-content: center;
+    text-align: center;
+  }
 }
 @media (max-width: 520px) {
   .volunteer-grid,

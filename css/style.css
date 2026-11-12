@@ -1239,9 +1239,12 @@ dialog p {
   }
   .hero-actions {
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 10px;
   }
   .hero-actions .button {
+    flex: 1 1 145px;
+    justify-content: center;
     padding: 12px 13px;
     font-size: 11px;
     gap: 8px;
@@ -1341,6 +1344,16 @@ dialog p {
   }
   .project-copy h3 {
     font-size: 22px;
+  }
+  .project-bottom {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .project-bottom > span:first-child {
+    flex: 1 1 100%;
+  }
+  .project-bottom .course-status {
+    margin-right: auto;
   }
   .section-heading > .arrow-link {
     margin-top: 15px;
