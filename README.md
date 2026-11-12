@@ -15,6 +15,7 @@ casa-mamae-margarida/
 ├── index.html                 Página inicial
 ├── solicitar-atendimento.html Solicitação pública
 ├── doacoes.html               Doações públicas
+├── voluntariado.html          Oportunidades e cadastro de voluntariado
 ├── contato.html               Contato público
 ├── login.html                 Login da equipe
 ├── recuperar-senha.html       Redefinição de senha
@@ -38,6 +39,7 @@ casa-mamae-margarida/
 │   ├── main.js                Site, cursos, projetos e diálogos
 │   ├── catalog.js             Conteúdo ilustrativo sem credenciais
 │   ├── forms.js               Envio dos formulários públicos
+│   ├── voluntariado.js        Filtros de vagas e cadastro de voluntariado
 │   ├── login.js               Login e recuperação de senha
 │   ├── dashboard.js           Consultas, CRUD, relatórios e Storage
 │   ├── admin-schema.js        Campos e colunas dos cadastros

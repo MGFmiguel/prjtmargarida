@@ -17,7 +17,8 @@ if (serviceSelect) {
   serviceSelect.value = new URLSearchParams(location.search).get('servico') || '';
 }
 const subject = form.querySelector('[name="assunto"]');
-if (subject) subject.value = new URLSearchParams(location.search).get('assunto') || '';
+if (subject)
+  subject.value = new URLSearchParams(location.search).get('assunto') || subject.dataset.default || '';
 const birthday = form.querySelector('[name="data_nascimento"]');
 if (birthday) birthday.max = new Date().toLocaleDateString('en-CA');
 const cpf = form.querySelector('[name="cpf"]');

@@ -7,6 +7,7 @@ const pages = [
   'recuperar-senha',
   'solicitar-atendimento',
   'doacoes',
+  'voluntariado',
   'contato',
   'dashboard',
   'beneficiarias',
