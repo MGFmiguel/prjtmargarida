@@ -1102,14 +1102,17 @@ dialog p {
     display: none;
     position: absolute;
     top: 120px;
-    left: 0;
-    right: 0;
+    right: 32px;
+    left: auto;
+    width: min(300px, calc(100vw - 64px));
     padding: 24px 32px;
     background: var(--cream);
     z-index: 20;
-    border-bottom: 1px solid var(--line);
+    border: 1px solid var(--line);
+    border-radius: 10px;
     box-shadow: 0 12px 22px #0001;
-    align-items: flex-start;
+    align-items: flex-end;
+    text-align: right;
     gap: 20px;
   }
   .nav-wrap nav.open {
@@ -1215,6 +1218,8 @@ dialog p {
   .nav-wrap nav {
     top: 109px;
     padding: 23px 20px;
+    right: 20px;
+    width: min(280px, calc(100vw - 40px));
   }
   .hero {
     padding: 22px 0 34px;
