@@ -16,8 +16,17 @@ document.querySelector('#toggle-password').onclick = () => {
   button.setAttribute('aria-label', visible ? 'Ocultar senha' : 'Mostrar senha');
   refreshIcons();
 };
+form.elements.password.addEventListener('input', () => form.elements.password.setCustomValidity(''));
 form.onsubmit = async (e) => {
   e.preventDefault();
+  if (form.dataset.mode === 'reset') {
+    const password = form.elements.password;
+    if (password.value.length < 6 || password.value.length > 12) {
+      password.setCustomValidity('A senha deve ter entre 6 e 12 caracteres.');
+      password.reportValidity();
+      return;
+    }
+  }
   const button = form.querySelector('[type="submit"]');
   button.disabled = true;
   status.textContent = '';

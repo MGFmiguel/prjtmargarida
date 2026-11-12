@@ -27,7 +27,7 @@
         <div class="auth-box">
           <div class="eyebrow">RECUPERAR MINHA CONTA</div>
           <h2>Um novo acesso.</h2>
-          <p>Defina uma senha com pelo menos 12 caracteres.</p>
+          <p>Defina uma senha entre 6 e 12 caracteres.</p>
           <form id="auth-form" data-mode="reset">
             <label class="field"
               >Nova senha *<span class="password-wrap"
@@ -36,6 +36,7 @@
                   type="password"
                   required
                   minlength="6"
+                  maxlength="12"
                   autocomplete="new-password"
                   placeholder="Crie sua nova senha" /><button
                   type="button"

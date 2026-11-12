@@ -78,7 +78,7 @@ No Windows, `npm.cmd` evita o bloqueio do `npm.ps1` pela política de execução
 1. Entre no [painel do Supabase](https://supabase.com/dashboard) e crie um projeto na sua organização.
 2. Dê um nome ao projeto, escolha a região e guarde a senha do banco em um local seguro.
 3. Aguarde o provisionamento.
-4. Em Authentication, mantenha login por e-mail habilitado. Para a nova Área da Usuária, aplique a migração 002 e habilite cadastro público com confirmação de e-mail; novas contas recebem somente o perfil `usuario`. A autorização de equipe continua sendo administrativa.
+4. Em Authentication, mantenha login por e-mail habilitado e ajuste a política de senha para aceitar no mínimo 6 caracteres. Para a nova Área da Usuária, aplique a migração 002 e habilite cadastro público com confirmação de e-mail; novas contas recebem somente o perfil `usuario`. A autorização de equipe continua sendo administrativa. As telas do site limitam novas senhas a 12 caracteres.
 5. Em Authentication → URL Configuration, configure a Site URL local e adicione `http://localhost:5173/recuperar-senha.html` às URLs permitidas. Se usar outro host ou porta, inclua a URL correspondente.
 
 **Teste:** confirme que você consegue abrir SQL Editor, Authentication e Storage no projeto. Consulte a documentação de [URLs de redirecionamento](https://supabase.com/docs/guides/auth/redirect-urls) para ajustar os ambientes local e publicado.

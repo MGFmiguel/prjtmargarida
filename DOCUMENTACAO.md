@@ -93,6 +93,8 @@ O Vite declara as páginas de entrada em `vite.config.js`. Ao adicionar uma pág
 
 Somente a URL e a chave **publicável** podem estar nas variáveis `VITE_` do frontend. Nunca coloque `service_role`, Secret Key, senha do banco ou outro segredo no navegador ou no repositório. O isolamento dos dados depende das políticas RLS configuradas no banco.
 
+As telas de cadastro e redefinição aceitam senhas de 6 a 12 caracteres. No Supabase, configure o requisito mínimo de senha para aceitar 6 caracteres; as opções de segurança ficam em Authentication. O limite máximo de 12 é validado pelas telas deste site e não substitui a política do provedor para chamadas diretas à API. Consulte [segurança de senhas do Supabase](https://supabase.com/docs/guides/auth/password-security).
+
 Para detalhes de ativação, migrações, permissões e diagnósticos, consulte [INTEGRACAO-SUPABASE.md](INTEGRACAO-SUPABASE.md) e [AREA-USUARIA.md](AREA-USUARIA.md).
 
 ## Perfis e acesso

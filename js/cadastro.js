@@ -8,19 +8,32 @@ form.elements.data_nascimento.max = new Date().toLocaleDateString('en-CA');
 form.elements.cpf.addEventListener('input', () => form.elements.cpf.setCustomValidity(''));
 for (const name of ['password', 'confirm_password'])
   form.elements[name].addEventListener('input', () =>
-    form.elements.confirm_password.setCustomValidity('')
+    form.elements[name].setCustomValidity('')
   );
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
+  const password = form.elements.password;
+  const confirmation = form.elements.confirm_password;
+  for (const input of [password, confirmation]) {
+    input.setCustomValidity(
+      input.value.length < 6 || input.value.length > 12
+        ? 'A senha deve ter entre 6 e 12 caracteres.'
+        : ''
+    );
+    if (!input.checkValidity()) {
+      input.reportValidity();
+      return;
+    }
+  }
   const cpf = form.elements.cpf;
   if (!validCPF(cpf.value)) {
     cpf.setCustomValidity('Informe um CPF válido.');
     cpf.reportValidity();
     return;
   }
-  if (form.elements.password.value !== form.elements.confirm_password.value) {
-    form.elements.confirm_password.setCustomValidity('As senhas devem ser iguais.');
-    form.elements.confirm_password.reportValidity();
+  if (password.value !== confirmation.value) {
+    confirmation.setCustomValidity('As senhas devem ser iguais.');
+    confirmation.reportValidity();
     return;
   }
   const button = form.querySelector('button[type="submit"]');

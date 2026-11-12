@@ -10,8 +10,8 @@ test('signup does not create an Auth account before migration is ready', async (
     cpf: '52998224725',
     telefone: '92999999999',
     email: 'alice@example.invalid',
-    password: 'Senha-de-teste-123',
-    confirm_password: 'Senha-de-teste-123',
+    password: 'Senha1234',
+    confirm_password: 'Senha1234',
   })) {
     await page.locator(`[name="${name}"]`).fill(value);
   }
@@ -31,14 +31,14 @@ test('public signup validates confirmation and sends no role or password in meta
   await page.getByLabel('CPF', { exact: false }).fill('52998224725');
   await page.getByLabel('Telefone').fill('92999999999');
   await page.getByLabel('E-mail').fill('alice@example.invalid');
-  await page.getByLabel('Senha *', { exact: true }).fill('Senha-de-teste-123');
-  await page.getByLabel('Confirmar senha').fill('Outra-senha-123');
+  await page.getByLabel('Senha *', { exact: true }).fill('Senha1234');
+  await page.getByLabel('Confirmar senha').fill('Outra123');
   await page.getByLabel('Autorizo o uso').check();
   await page.getByRole('button', { name: 'Criar minha conta' }).click();
   expect(
     await page.getByLabel('Confirmar senha').evaluate((el) => el.validity.customError)
   ).toBeTruthy();
-  await page.getByLabel('Confirmar senha').fill('Senha-de-teste-123');
+  await page.getByLabel('Confirmar senha').fill('Senha1234');
   await page.getByRole('button', { name: 'Criar minha conta' }).click();
   await expect(page.locator('.form-status')).toContainText('Confira seu e-mail');
   const options = await page.evaluate(() => window.signupPayload.options);
@@ -53,7 +53,7 @@ test('user login routes to individual dashboard and admin URL redirects back', a
   await userFixture(page);
   await page.goto('/login.html');
   await page.getByLabel('E-mail').fill('alice@example.invalid');
-  await page.locator('[name=password]').fill('Senha-de-teste-123');
+  await page.locator('[name=password]').fill('Senha1234');
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   await expect(page).toHaveURL(/area-usuario.html/);
   await expect(page.locator('h1')).toContainText('Alice');
