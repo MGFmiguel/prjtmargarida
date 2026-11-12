@@ -1,19 +1,26 @@
 .user-body .sidebar {
   background: #f3eae5;
+  overflow: hidden;
+}
+.user-body .sidebar > .brand,
+.user-body .sidebar-label {
+  flex-shrink: 0;
+}
+.user-body .sidebar nav {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: max(16px, env(safe-area-inset-bottom));
 }
-.user-body .sidebar > .brand,
-.user-body .sidebar-label,
-.user-body .sidebar nav {
+.user-body .sidebar > .button.small {
   flex-shrink: 0;
+  margin-top: 14px !important;
 }
 .user-body .sidebar .logout {
-  position: sticky;
-  bottom: 0;
   z-index: 1;
+  position: static;
+  margin-top: 8px;
   flex-shrink: 0;
   padding-block: 14px;
   background: #f3eae5;
@@ -245,29 +252,6 @@
   }
   .user-content-grid {
     grid-template-columns: 1fr;
-  }
-}
-@media (max-width: 800px) {
-  .user-body .sidebar {
-    max-height: 100dvh;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: max(16px, env(safe-area-inset-bottom));
-  }
-  .user-body .sidebar > .brand,
-  .user-body .sidebar-label,
-  .user-body .sidebar nav {
-    flex-shrink: 0;
-  }
-  .user-body .sidebar .logout {
-    position: sticky;
-    bottom: 0;
-    z-index: 1;
-    flex-shrink: 0;
-    padding-block: 14px;
-    background: #f3eae5;
-    border-top: 1px solid #e2d5cf;
   }
 }
 @media (max-width: 650px) {
