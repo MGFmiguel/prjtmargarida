@@ -14,6 +14,7 @@ create table public.perfis (
 create table public.servicos (
   id uuid primary key default gen_random_uuid(), nome text not null check(length(trim(nome)) between 3 and 250),
   descricao text not null check(length(descricao) between 3 and 4000), imagem_url text,
+  categoria text check(categoria in ('Capacitação profissional','Artes e ofícios','Educação e cidadania','Saúde e bem-estar','Outros cursos')),
   data_inicio date, data_fim date,
   status text not null default 'Inscrições abertas' check(status in ('Inscrições abertas','Em breve','Em andamento','Encerrado')),
   ativo boolean not null default true, created_at timestamptz not null default now(),

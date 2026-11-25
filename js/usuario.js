@@ -75,13 +75,45 @@ function appointmentCard(row, compact = false) {
   return `<article class="appointment-card"><div class="appointment-date"><strong>${date.getDate()}</strong><small>${date.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })}</small></div><div class="appointment-info"><h3>${esc(row.tipo_atendimento)}</h3><p>${esc(row.profissional || 'Profissional a confirmar')}</p><div class="appointment-meta"><span>${icon('clock-3')}${timeBR(row.data_atendimento)}</span><span>${icon('map-pin')}${esc(row.local || 'Local a confirmar')}</span></div>${!compact && row.observacao_usuario ? `<p>${esc(row.observacao_usuario)}</p>` : ''}</div>${badge(row.status)}</article>`;
 }
 function renderCourses() {
-  const list = courses
-    .map(
-      (course) =>
-        `<article class="project-card"><div class="project-image">${course.imagem_url ? `<img src="${esc(course.imagem_url)}" alt="" loading="lazy">` : icon('book-open')}<span>CURSOS E OFICINAS</span></div><div class="project-copy"><h3>${esc(course.nome)}</h3><p class="card-description">${esc(course.descricao || '')}</p><button class="text-button read-more" type="button" data-read-more>Ler mais</button><div class="project-bottom"><span>${icon('calendar-days')} ${coursePeriod(course)}</span><span class="course-status">${esc(course.status || 'Inscrições abertas')}</span><button class="icon-button" data-user-course="${esc(course.id)}" aria-label="Detalhes de ${esc(course.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
-    )
-    .join('');
+  const categories = new Map();
+  for (const course of courses) {
+    const category = courseCategory(course);
+    if (!categories.has(category)) categories.set(category, []);
+    categories.get(category).push(course);
+  }
+  const list = [...categories].map(([category, items]) =>
+    `<section class="course-category"><h3 class="course-category-title">${esc(category)}</h3><div class="project-grid">${items
+      .map(
+        (course) =>
+          `<article class="project-card"><div class="project-image">${course.imagem_url ? `<img src="${esc(course.imagem_url)}" alt="" loading="lazy">` : icon('book-open')}<span>${esc(category)}</span></div><div class="project-copy"><h3>${esc(course.nome)}</h3><p class="card-description">${linkifyText(course.descricao)}</p><button class="text-button read-more" type="button" data-read-more>Ler mais</button><div class="project-bottom"><span>${icon('calendar-days')} ${coursePeriod(course)}</span><span class="course-status">${esc(course.status || 'Inscrições abertas')}</span><button class="icon-button" data-user-course="${esc(course.id)}" aria-label="Detalhes de ${esc(course.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
+      )
+      .join('')}</div></section>`
+  ).join('');
   return list || empty('Novos cursos serão divulgados em breve.');
+}
+function courseCategory(course) {
+  if (course.categoria) return course.categoria;
+  const text = `${course.nome || ''} ${course.descricao || ''}`.toLowerCase();
+  if (/profiss|trabalho|emprego|renda|currículo|curriculo/.test(text)) return 'Capacitação profissional';
+  if (/art|costura|crochê|croche|bordado|beleza|criativ|culinária|culinaria/.test(text)) return 'Artes e ofícios';
+  if (/saúde|saude|bem-estar|emocional|psic/.test(text)) return 'Saúde e bem-estar';
+  if (/educa|curso|idioma|informática|informatica|cidadania|direitos/.test(text)) return 'Educação e cidadania';
+  return 'Outros cursos';
+}
+function linkifyText(value) {
+  const text = String(value || '');
+  const urlPattern = /(https?:\/\/[^\s]+)/gi;
+  let html = '';
+  let lastIndex = 0;
+  for (const match of text.matchAll(urlPattern)) {
+    html += esc(text.slice(lastIndex, match.index));
+    let url = match[0];
+    const trailing = url.match(/[),.!;:?]+$/)?.[0] || '';
+    if (trailing) url = url.slice(0, -trailing.length);
+    html += `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(url)}</a>${esc(trailing)}`;
+    lastIndex = match.index + match[0].length;
+  }
+  return html + esc(text.slice(lastIndex));
 }
 function coursePeriod(course) {
   const start = course.data_inicio ? dateBR(course.data_inicio) : '';
@@ -106,7 +138,7 @@ function renderData() {
         .slice(0, 3)
         .map((a) => appointmentCard(a, true))
         .join('') || empty('Quando um atendimento for agendado, ele aparecerá aqui.')
-    }</div><a class="button" style="margin-top:20px" href="nova-solicitacao.html">Solicitar atendimento ${icon('arrow-up-right')}</a></section><section class="panel"><h2>Novidades para você</h2>${notifications.slice(0, 3).map(notificationCard).join('') || empty('Nenhuma novidade por enquanto.')}<a class="text-button" href="notificacoes.html">Ver todas as notificações</a></section></div><section class="user-courses"><div class="section-heading"><div><div class="eyebrow">APRENDIZADO E NOVAS POSSIBILIDADES</div><h2>Cursos para você</h2></div><a class="text-button arrow-link" href="index.html#cursos">Ver no site ${icon('arrow-up-right')}</a></div><div class="project-grid">${renderCourses()}</div></section>`;
+    }</div><a class="button" style="margin-top:20px" href="nova-solicitacao.html">Solicitar atendimento ${icon('arrow-up-right')}</a></section><section class="panel"><h2>Novidades para você</h2>${notifications.slice(0, 3).map(notificationCard).join('') || empty('Nenhuma novidade por enquanto.')}<a class="text-button" href="notificacoes.html">Ver todas as notificações</a></section></div><section class="user-courses"><div class="section-heading"><div><div class="eyebrow">APRENDIZADO E NOVAS POSSIBILIDADES</div><h2>Cursos para você</h2></div><a class="text-button arrow-link" href="index.html#cursos">Ver no site ${icon('arrow-up-right')}</a></div><div>${renderCourses()}</div></section>`;
     content.querySelectorAll('[data-read-more]').forEach((button) => {
       button.onclick = () => {
         const description = button.previousElementSibling;
@@ -119,7 +151,7 @@ function renderData() {
         const course = courses.find((item) => String(item.id) === button.dataset.userCourse);
         showDialog(
           course.nome,
-          `<p>${esc(course.descricao || '')}</p><p>Período: ${esc(coursePeriod(course))}. Status: ${esc(course.status || 'Inscrições abertas')}.</p>${course.status === 'Inscrições abertas' ? `<a class="button" href="nova-solicitacao.html?servico_id=${encodeURIComponent(course.id)}">Inscrever-se no curso ${icon('arrow-up-right')}</a>` : '<p>As inscrições para este curso não estão abertas no momento.</p>'}`
+          `<p><strong>${esc(courseCategory(course))}</strong></p><p>${linkifyText(course.descricao)}</p><p>Período: ${esc(coursePeriod(course))}. Status: ${esc(course.status || 'Inscrições abertas')}.</p>${course.status === 'Inscrições abertas' ? `<a class="button" href="nova-solicitacao.html?servico_id=${encodeURIComponent(course.id)}">Inscrever-se no curso ${icon('arrow-up-right')}</a>` : '<p>As inscrições para este curso não estão abertas no momento.</p>'}`
         );
       };
     });

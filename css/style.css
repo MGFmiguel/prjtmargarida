@@ -582,6 +582,24 @@ p {
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
+.course-category + .course-category {
+  margin-top: 38px;
+}
+.course-category-title {
+  margin: 0 0 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--green);
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 400;
+}
+.card-description a,
+dialog a {
+  color: var(--rose);
+  text-decoration: underline;
+  overflow-wrap: anywhere;
+}
 .project-card {
   border: 1px solid var(--line);
   border-radius: 7px;

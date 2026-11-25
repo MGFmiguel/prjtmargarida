@@ -70,6 +70,7 @@ export const schemas = {
     adminWrite: true,
     columns: [
       ['nome', 'Curso'],
+      ['categoria', 'Categoria'],
       ['data_inicio', 'Início'],
       ['data_fim', 'Fim'],
       ['status', 'Status'],
@@ -78,6 +79,13 @@ export const schemas = {
     fields: [
       text('nome', 'Nome do curso'),
       area('descricao', 'Descrição'),
+      select('categoria', 'Categoria', [
+        'Capacitação profissional',
+        'Artes e ofícios',
+        'Educação e cidadania',
+        'Saúde e bem-estar',
+        'Outros cursos',
+      ]),
       { key: 'data_inicio', label: 'Data de início', type: 'date' },
       { key: 'data_fim', label: 'Data final', type: 'date' },
       select('status', 'Status do curso', [

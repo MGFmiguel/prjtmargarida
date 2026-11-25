@@ -10,11 +10,22 @@ let serviceData = services.filter((service) =>
   projectData = projects;
 function renderCourses() {
   const courses = serviceData;
+  const categories = new Map();
+  for (const course of courses) {
+    const category = courseCategory(course);
+    if (!categories.has(category)) categories.set(category, []);
+    categories.get(category).push(course);
+  }
   document.querySelector('#courses-list').innerHTML =
-    courses
+    [...categories]
       .map(
-        (course) =>
-          `<article class="project-card"><div class="project-image">${course.imagem_url ? `<img src="${esc(safeImage(course.imagem_url))}" alt="" loading="lazy">` : icon(course.icon || 'book-open')}<span>CURSOS E OFICINAS</span></div><div class="project-copy"><h3>${esc(course.nome)}</h3><p class="card-description">${esc(course.descricao)}</p><button class="text-button read-more" type="button" data-read-more>Ler mais</button><div class="project-bottom"><span>${icon('calendar-days')} ${coursePeriod(course)}</span><span class="course-status">${esc(course.status || 'Inscrições abertas')}</span><button class="icon-button" data-course="${esc(course.id)}" aria-label="Detalhes de ${esc(course.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
+        ([category, items]) =>
+          `<section class="course-category"><h3 class="course-category-title">${esc(category)}</h3><div class="project-grid">${items
+            .map(
+              (course) =>
+                `<article class="project-card"><div class="project-image">${course.imagem_url ? `<img src="${esc(safeImage(course.imagem_url))}" alt="" loading="lazy">` : icon(course.icon || 'book-open')}<span>${esc(category)}</span></div><div class="project-copy"><h3>${esc(course.nome)}</h3><p class="card-description">${linkifyText(course.descricao)}</p><button class="text-button read-more" type="button" data-read-more>Ler mais</button><div class="project-bottom"><span>${icon('calendar-days')} ${coursePeriod(course)}</span><span class="course-status">${esc(course.status || 'Inscrições abertas')}</span><button class="icon-button" data-course="${esc(course.id)}" aria-label="Detalhes de ${esc(course.nome)}">${icon('arrow-up-right')}</button></div></div></article>`
+            )
+            .join('')}</div></section>`
       )
       .join('') || '<p class="empty-state">Novos cursos serão divulgados em breve.</p>';
   bindReadMore(document.querySelector('#courses-list'));
@@ -26,7 +37,7 @@ function renderCourses() {
           configured && (course.status || 'Inscrições abertas') === 'Inscrições abertas';
         showDialog(
           course.nome,
-          `<p>${esc(course.descricao)}</p><p>Período: ${esc(coursePeriod(course))}. Status: ${esc(course.status || 'Inscrições abertas')}.</p>${canEnroll ? `<button class="button" type="button" data-enroll-course>Inscrever-se no curso ${icon('arrow-up-right')}</button><p class="form-status" data-enroll-status role="status"></p>` : `<p>Fale com a nossa equipe para saber sobre disponibilidade e próximas turmas.</p><a class="button" href="contato.html?assunto=${encodeURIComponent(course.nome)}">Tenho interesse ${icon('arrow-up-right')}</a>`}`
+          `<p><strong>${esc(courseCategory(course))}</strong></p><p>${linkifyText(course.descricao)}</p><p>Período: ${esc(coursePeriod(course))}. Status: ${esc(course.status || 'Inscrições abertas')}.</p>${canEnroll ? `<button class="button" type="button" data-enroll-course>Inscrever-se no curso ${icon('arrow-up-right')}</button><p class="form-status" data-enroll-status role="status"></p>` : `<p>Fale com a nossa equipe para saber sobre disponibilidade e próximas turmas.</p><a class="button" href="contato.html?assunto=${encodeURIComponent(course.nome)}">Tenho interesse ${icon('arrow-up-right')}</a>`}`
         );
         document.querySelector('[data-enroll-course]')?.addEventListener('click', async (event) => {
           const enrollButton = event.currentTarget;
@@ -55,6 +66,30 @@ function coursePeriod(course) {
   if (start) return `A partir de ${start}`;
   if (end) return `Até ${end}`;
   return 'Datas a confirmar';
+}
+function courseCategory(course) {
+  if (course.categoria) return course.categoria;
+  const text = `${course.nome || ''} ${course.descricao || ''}`.toLowerCase();
+  if (/profiss|trabalho|emprego|renda|currículo|curriculo/.test(text)) return 'Capacitação profissional';
+  if (/art|costura|crochê|croche|bordado|beleza|criativ|culinária|culinaria/.test(text)) return 'Artes e ofícios';
+  if (/saúde|saude|bem-estar|emocional|psic/.test(text)) return 'Saúde e bem-estar';
+  if (/educa|curso|idioma|informática|informatica|cidadania|direitos/.test(text)) return 'Educação e cidadania';
+  return 'Outros cursos';
+}
+function linkifyText(value) {
+  const text = String(value || '');
+  const urlPattern = /(https?:\/\/[^\s]+)/gi;
+  let html = '';
+  let lastIndex = 0;
+  for (const match of text.matchAll(urlPattern)) {
+    html += esc(text.slice(lastIndex, match.index));
+    let url = match[0];
+    const trailing = url.match(/[),.!;:?]+$/)?.[0] || '';
+    if (trailing) url = url.slice(0, -trailing.length);
+    html += `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(url)}</a>${esc(trailing)}`;
+    lastIndex = match.index + match[0].length;
+  }
+  return html + esc(text.slice(lastIndex));
 }
 function renderProjects() {
   document.querySelector('#projects-list').innerHTML =
