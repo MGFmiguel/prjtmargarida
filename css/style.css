@@ -582,6 +582,9 @@ p {
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
+#courses-list {
+  display: block;
+}
 .course-category + .course-category {
   margin-top: 38px;
 }
